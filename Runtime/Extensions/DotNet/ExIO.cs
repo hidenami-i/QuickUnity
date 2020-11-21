@@ -5,8 +5,6 @@ using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using QuickUnity.Extensions.Unity;
-using QuickUnity.Extensions.Security;
-using UnityEngine;
 
 namespace QuickUnity.Extensions.DotNet
 {

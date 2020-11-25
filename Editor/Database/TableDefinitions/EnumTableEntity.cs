@@ -93,7 +93,8 @@ namespace QuickUnity.Editor.Database.TableDefinition
             }
 
             stringBuilder.Indent4()
-                .AppendLine("_ => throw new ArgumentNullException(\"It is an undefined value.\")");
+                .AppendLine(
+                    $"_ => throw new ArgumentNullException($\"It is an undefined {enumPhysicalName.ConvertsSnakeToUpperCamel()}.\")");
             stringBuilder.Indent3().AppendLine("};");
             stringBuilder.Indent2().AppendLine("}");
             stringBuilder.AppendLine();

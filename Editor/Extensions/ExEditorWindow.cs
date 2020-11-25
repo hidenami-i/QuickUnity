@@ -12,7 +12,7 @@ namespace Editor.Extensions
 
         public static EditorWindow GetExistingWindowByName(string name)
         {
-            EditorWindow[] windows = Resources.FindObjectsOfTypeAll<EditorWindow>();
+            var windows = Resources.FindObjectsOfTypeAll<EditorWindow>();
             foreach (EditorWindow item in windows)
             {
                 if (item.titleContent.text == name)

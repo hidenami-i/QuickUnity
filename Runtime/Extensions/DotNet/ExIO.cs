@@ -14,7 +14,7 @@ namespace QuickUnity.Extensions.DotNet
     /// </summary>
     public static class ExIO
     {
-        public static readonly byte[] EmptyBytes = new byte[0];
+        private static readonly byte[] EmptyBytes = new byte[0];
 
         /// <summary>
         /// Creates the directory not exists.
@@ -47,7 +47,7 @@ namespace QuickUnity.Extensions.DotNet
         /// <param name="contents">Content.</param>
         public static void WriteAllTextAsUTF8(string folderPath, string fileName, string contents)
         {
-            File.WriteAllText(Path.Combine(folderPath, fileName), contents, Encoding.UTF8);
+            WriteAllTextAsUTF8(Path.Combine(folderPath, fileName), contents);
         }
 
         /// <summary>

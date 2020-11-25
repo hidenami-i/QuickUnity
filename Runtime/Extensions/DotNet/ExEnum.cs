@@ -71,7 +71,7 @@ namespace QuickUnity.Extensions.DotNet
             return Enum.GetNames(typeof(T)).CountIfNullZero();
         }
 
-        /// <summary>
+        /// <summary>√√√√
         /// Converts string type to enumerated type.
         /// </summary>
         /// <returns>The enum.</returns>

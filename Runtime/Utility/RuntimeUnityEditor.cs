@@ -1,10 +1,6 @@
 ﻿using System.Diagnostics;
 using UnityEditor;
 
-#if UNITY_EDITOR
-
-#endif
-
 namespace QuickUnity.Utility
 {
     public static class RuntimeUnityEditor

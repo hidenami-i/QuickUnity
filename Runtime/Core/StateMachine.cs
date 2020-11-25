@@ -43,7 +43,7 @@ namespace QuickUnity.Core
         private float updateDeltaTime;
         private float fixedUpdateDeltaTime;
 
-        public static StateMachine<TContext> CreateInstance<TStartState>(TContext context)
+        public static StateMachine<TContext> CreateStateMachine<TStartState>(TContext context)
             where TStartState : StateBase, new()
         {
             StateMachine<TContext> stateMachine = new StateMachine<TContext>(context);

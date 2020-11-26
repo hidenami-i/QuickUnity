@@ -26,7 +26,7 @@ namespace QuickUnity.Extensions.DotNet
 
         public static FieldInfo[] FieldInfoWithBaseClass(this Type type, BindingFlags flags)
         {
-            FieldInfo[] fieldInfos = type.GetFields(flags);
+            var fieldInfos = type.GetFields(flags);
             Type objectType = typeof(object);
             if (type.BaseType == objectType)
             {
@@ -34,7 +34,7 @@ namespace QuickUnity.Extensions.DotNet
             }
 
             Type currentType = type;
-            HashSet<FieldInfo> fieldInfosHash = new HashSet<FieldInfo>(fieldInfos, fieldInfoComparer);
+            var fieldInfosHash = new HashSet<FieldInfo>(fieldInfos, fieldInfoComparer);
             while (currentType != objectType)
             {
                 fieldInfos = currentType.GetFields(flags);

@@ -1,10 +1,10 @@
 ﻿using System.IO;
-using Editor.Extensions;
+using QuickUnity.Editor.Extensions;
 using QuickUnity.Extensions.DotNet;
 using UnityEditor;
 using UnityEngine;
 
-namespace QuickUnity.Menu
+namespace QuickUnity.Editor.Menu
 {
     public static class CreateFileMenu
     {
@@ -28,7 +28,7 @@ namespace QuickUnity.Menu
 
         private static void CreateFile(string fileName)
         {
-            string folderPath = ExAssetDatabase.GetSelectedPathOrFallback();
+            var folderPath = ExAssetDatabase.GetSelectedPathOrFallback();
 
             if (!ExIO.IsFolder(folderPath))
             {
@@ -36,7 +36,7 @@ namespace QuickUnity.Menu
                 return;
             }
 
-            string filePath = Path.Combine(folderPath, fileName);
+            var filePath = Path.Combine(folderPath, fileName);
 
             if (File.Exists(filePath))
             {

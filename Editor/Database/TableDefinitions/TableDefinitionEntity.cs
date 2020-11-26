@@ -1,14 +1,14 @@
 using QuickUnity.Editor.Utility;
 using QuickUnity.Extensions.DotNet;
-using QuickUnity.Runtime.Database;
-#if UNITY_EDITOR
+using QuickUnity.Database;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using QuickUnity.Editor.Database.Enumerations;
 using UnityEngine;
 
-namespace IMDB4Unity.Editor
+namespace QuickUnity.Editor.Database.TableDefinition
 {
     [Serializable]
     public class TableDefinitionEntity : EntityBase
@@ -55,52 +55,36 @@ namespace IMDB4Unity.Editor
             }
         }
 
-        string GetClassName => SchemaType + PhysicalName.ConvertsSnakeToUpperCamel();
+        private string ClassName => PhysicalName.ConvertsSnakeToUpperCamel();
+        public string EntityScriptFileName => PhysicalName.ConvertsSnakeToUpperCamel() + "Entity.cs";
+        public string EntityServiceScriptFileName => PhysicalName.ConvertsSnakeToUpperCamel() + "EntityService.cs";
+        public string RepositoryScriptFileName => PhysicalName.ConvertsSnakeToUpperCamel() + "Repository.cs";
 
-        #region script generate
+        public string RepositoryServiceScriptFileName =>
+            PhysicalName.ConvertsSnakeToUpperCamel() + "RepositoryService.cs";
 
-        public string GetEntityScriptFileName =>
-            SchemaType.ToString().ConvertsSnakeToUpperCamel() + PhysicalName.ConvertsSnakeToUpperCamel() + "Entity.cs";
+        public string DataMapperScriptFileName => PhysicalName.ConvertsSnakeToUpperCamel() + "DataMapper.cs";
 
-        public string GetEntityServiceScriptFileName =>
-            SchemaType.ToString().ConvertsSnakeToUpperCamel() + PhysicalName.ConvertsSnakeToUpperCamel() +
-            "EntityService.cs";
-
-        public string GetRepositoryScriptFileName =>
-            SchemaType.ToString().ConvertsSnakeToUpperCamel() + PhysicalName.ConvertsSnakeToUpperCamel() +
-            "Repository.cs";
-
-        public string GetRepositoryServiceScriptFileName =>
-            SchemaType.ToString().ConvertsSnakeToUpperCamel() + PhysicalName.ConvertsSnakeToUpperCamel() +
-            "RepositoryService.cs";
-
-        public string GetDataMapperScriptFileName =>
-            SchemaType.ToString().ConvertsSnakeToUpperCamel() + PhysicalName.ConvertsSnakeToUpperCamel() +
-            "DataMapper.cs";
-
-        public string GetDataMapperServiceScriptFileName =>
-            SchemaType.ToString().ConvertsSnakeToUpperCamel() + PhysicalName.ConvertsSnakeToUpperCamel() +
-            "DataMapperService.cs";
-
-        public string GetEnumScriptFileName => PhysicalName.ConvertsSnakeToUpperCamel() + ".cs";
+        public string DataMapperServiceScriptFileName =>
+            PhysicalName.ConvertsSnakeToUpperCamel() + "DataMapperService.cs";
 
         /// <summary>
         /// Generate Entity Classes.
         /// </summary>
         /// <returns>Entity Script.</returns>
-        public string GenerateEntityScript()
+        public string GenerateEntityScript(string nameSpace)
         {
             StringBuilder stringBuilder = new StringBuilder();
 
             // Header
-            stringBuilder.SetUsing("System", "System.Text", "IMDB4Unity", "UnityEngine");
+            stringBuilder.SetUsing("System", "System.Text", "QuickUnity.Database", "UnityEngine");
             stringBuilder.AppendLine();
-            stringBuilder.SetNameSpace("App");
+            stringBuilder.SetNameSpace(nameSpace);
 
             stringBuilder.AppendLine("{");
             stringBuilder.AppendLine(GetTableLogicalNameScript);
             stringBuilder.Indent1().AppendLine("[Serializable]");
-            stringBuilder.Indent1().AppendLine($"public sealed partial class {GetClassName}Entity : EntityBase");
+            stringBuilder.Indent1().AppendLine($"public sealed partial class {ClassName}Entity : EntityBase");
             stringBuilder.Indent1().AppendLine("{");
 
             // Field list
@@ -124,8 +108,8 @@ namespace IMDB4Unity.Editor
             }
 
             // default constructor
-            stringBuilder.Indent2().Append($"public {GetClassName}Entity()").AppendLine(" {}");
-            stringBuilder.Indent2().AppendLine($"public {GetClassName}Entity(");
+            stringBuilder.Indent2().Append($"public {ClassName}Entity()").AppendLine(" {}");
+            stringBuilder.Indent2().AppendLine($"public {ClassName}Entity(");
 
             // Constructor argument list
             string argument = string.Join(",\n", data.Select(x => "\t\t\t" + x.GenerateConstructorArgumentScript));
@@ -146,7 +130,7 @@ namespace IMDB4Unity.Editor
             stringBuilder.Indent2().AppendLine("public override string ToString() {");
             stringBuilder.Indent3().AppendLine("StringBuilder builder = new StringBuilder();");
             stringBuilder.Indent3().Append("builder.AppendLine().AppendLine($\"<b>ClassName [{nameof(");
-            stringBuilder.Append($"{GetClassName}" + "Entity");
+            stringBuilder.Append($"{ClassName}" + "Entity");
             stringBuilder.Append(")}]</b>\");");
             stringBuilder.AppendLine();
 
@@ -165,15 +149,15 @@ namespace IMDB4Unity.Editor
             return stringBuilder.ToString();
         }
 
-        public string GenerateEntityServiceScript()
+        public string GenerateEntityServiceScript(string nameSpace)
         {
             StringBuilder stringBuilder = new StringBuilder();
 
             // Header
-            stringBuilder.SetNameSpace("App");
+            stringBuilder.SetNameSpace(nameSpace);
 
             stringBuilder.AppendLine("{");
-            stringBuilder.Indent1().AppendLine($"public sealed partial class {GetClassName}Entity");
+            stringBuilder.Indent1().AppendLine($"public sealed partial class {ClassName}Entity");
             stringBuilder.Indent1().AppendLine("{");
             stringBuilder.Indent1().AppendLine("}");
             stringBuilder.Indent0().AppendLine("}");
@@ -185,28 +169,28 @@ namespace IMDB4Unity.Editor
         /// Generate Repository Classes.
         /// </summary>
         /// <returns>Repository Script.</returns>
-        public string GenerateRepositoryScript()
+        public string GenerateRepositoryScript(string nameSpace)
         {
             StringBuilder stringBuilder = new StringBuilder();
 
             // Header
-            stringBuilder.SetUsing("System", "System.Collections.Generic", "IMDB4Unity", "UnityEngine");
+            stringBuilder.SetUsing("System", "System.Collections.Generic", "QuickUnity.Database", "UnityEngine");
             stringBuilder.AppendLine();
-            stringBuilder.SetNameSpace("App");
+            stringBuilder.SetNameSpace(nameSpace);
 
             stringBuilder.AppendLine("{");
             stringBuilder.AppendLine(GetTableLogicalNameScript);
             stringBuilder.Indent1().AppendLine("[Serializable]");
             stringBuilder.Indent1()
                 .AppendLine(
-                    $"public sealed partial class {GetClassName}Repository : RepositoryBase<{GetClassName}Entity, {GetClassName}Repository>, IDatabase");
+                    $"public sealed partial class {ClassName}Repository : RepositoryBase<{ClassName}Entity, {ClassName}Repository>, IDatabase");
             stringBuilder.Indent1().AppendLine("{");
 
             stringBuilder.SetSummaryComment("This field is generated automatically, so it can not be edited.", 2);
             stringBuilder.AppendLine();
             stringBuilder.Indent2()
                 .AppendLine(
-                    $"[SerializeField] private List<{GetClassName}Entity> {GetClassName.ConvertsSnakeToLowerCamel()} = new List<{GetClassName}Entity>();");
+                    $"[SerializeField] private List<{ClassName}Entity> {ClassName.ConvertsSnakeToLowerCamel()} = new List<{ClassName}Entity>();");
 
             stringBuilder.AppendLine();
 
@@ -214,7 +198,7 @@ namespace IMDB4Unity.Editor
             stringBuilder.AppendLine();
             stringBuilder.Indent2()
                 .AppendLine(
-                    $"protected override List<{GetClassName}Entity> EntityList => {GetClassName.ConvertsSnakeToLowerCamel()};");
+                    $"protected override List<{ClassName}Entity> EntityList => {ClassName.ConvertsSnakeToLowerCamel()};");
 
             stringBuilder.AppendLine();
 
@@ -227,19 +211,19 @@ namespace IMDB4Unity.Editor
             // find function
             foreach (TableDefinitionDataEntity tableDefinitionEntity in data)
             {
-                stringBuilder.AppendLine(tableDefinitionEntity.GenerateFindFunctionScript(GetClassName));
+                stringBuilder.AppendLine(tableDefinitionEntity.GenerateFindFunctionScript(ClassName));
             }
 
             // find if null or default function
             foreach (TableDefinitionDataEntity tableDefinitionEntity in data)
             {
-                stringBuilder.AppendLine(tableDefinitionEntity.GenerateGetOrDefaultFunctionScript(GetClassName));
+                stringBuilder.AppendLine(tableDefinitionEntity.GenerateGetOrDefaultFunctionScript(ClassName));
             }
 
             // find all function
             foreach (TableDefinitionDataEntity tableDefinitionEntity in data)
             {
-                stringBuilder.AppendLine(tableDefinitionEntity.GenerateFindAllFunctionScript(GetClassName));
+                stringBuilder.AppendLine(tableDefinitionEntity.GenerateFindAllFunctionScript(ClassName));
             }
 
             stringBuilder.Indent1().AppendLine("}");
@@ -248,15 +232,15 @@ namespace IMDB4Unity.Editor
             return stringBuilder.ToString();
         }
 
-        public string GenerateRepositoryServiceScript()
+        public string GenerateRepositoryServiceScript(string nameSpace)
         {
             StringBuilder stringBuilder = new StringBuilder();
 
             // Header
-            stringBuilder.SetNameSpace("App");
+            stringBuilder.SetNameSpace(nameSpace);
 
             stringBuilder.AppendLine("{");
-            stringBuilder.Indent1().AppendLine($"public sealed partial class {GetClassName}Repository");
+            stringBuilder.Indent1().AppendLine($"public sealed partial class {ClassName}Repository");
             stringBuilder.Indent1().AppendLine("{");
             stringBuilder.Indent1().AppendLine("}");
             stringBuilder.Indent0().AppendLine("}");
@@ -264,28 +248,28 @@ namespace IMDB4Unity.Editor
             return stringBuilder.ToString();
         }
 
-        public string GenerateDataMapperScript()
+        public string GenerateDataMapperScript(string nameSpace)
         {
             StringBuilder stringBuilder = new StringBuilder();
 
             // Header
-            stringBuilder.SetUsing("System", "IMDB4Unity", "UnityEngine");
+            stringBuilder.SetUsing("System", "QuickUnity.Database", "UnityEngine");
             stringBuilder.AppendLine();
-            stringBuilder.SetNameSpace("App");
+            stringBuilder.SetNameSpace(nameSpace);
 
             stringBuilder.AppendLine("{");
             stringBuilder.AppendLine(GetTableLogicalNameScript);
             stringBuilder.Indent1().AppendLine("[Serializable]");
             stringBuilder.Indent1()
                 .AppendLine(
-                    $"public sealed partial class {GetClassName}DataMapper : DataMapperBase<{GetClassName}Entity, {GetClassName}DataMapper>, IDatabase");
+                    $"public sealed partial class {ClassName}DataMapper : DataMapperBase<{ClassName}Entity, {ClassName}DataMapper>, IDatabase");
             stringBuilder.Indent1().AppendLine("{");
 
             stringBuilder.SetSummaryComment("This field is generated automatically, so it can not be edited.", 2);
             stringBuilder.AppendLine();
             stringBuilder.Indent2()
                 .AppendLine(
-                    $"[SerializeField] private {GetClassName}Entity {GetClassName.ConvertsSnakeToLowerCamel()} = null;");
+                    $"[SerializeField] private {ClassName}Entity {ClassName.ConvertsSnakeToLowerCamel()} = null;");
 
             stringBuilder.AppendLine();
 
@@ -293,89 +277,30 @@ namespace IMDB4Unity.Editor
             stringBuilder.AppendLine();
             stringBuilder.Indent2()
                 .AppendLine(
-                    $"protected override {GetClassName}Entity Entity {{ get => {GetClassName.ConvertsSnakeToLowerCamel()}; set => {GetClassName.ConvertsSnakeToLowerCamel()} = value; }}");
+                    $"protected override {ClassName}Entity Entity {{ get => {ClassName.ConvertsSnakeToLowerCamel()}; set => {ClassName.ConvertsSnakeToLowerCamel()} = value; }}");
+
+            stringBuilder.Indent2().AppendLine($"public string Schema => \"{schema}\";");
+
             stringBuilder.Indent1().AppendLine("}");
             stringBuilder.Indent0().AppendLine("}");
 
             return stringBuilder.ToString();
         }
 
-        public string GenerateDataMapperServiceScript()
+        public string GenerateDataMapperServiceScript(string nameSpace)
         {
             StringBuilder stringBuilder = new StringBuilder();
 
             // Header
-            stringBuilder.SetNameSpace("App");
+            stringBuilder.SetNameSpace(nameSpace);
 
             stringBuilder.AppendLine("{");
-            stringBuilder.Indent1().AppendLine($"public sealed partial class {GetClassName}DataMapperService");
+            stringBuilder.Indent1().AppendLine($"public sealed partial class {ClassName}DataMapperService");
             stringBuilder.Indent1().AppendLine("{");
             stringBuilder.Indent1().AppendLine("}");
             stringBuilder.Indent0().AppendLine("}");
 
             return stringBuilder.ToString();
         }
-
-        public string GenerateEnumScript()
-        {
-            StringBuilder stringBuilder = new StringBuilder();
-
-            stringBuilder.SetUsing("System.Collections.Generic");
-            stringBuilder.AppendLine();
-            stringBuilder.SetNameSpace("App");
-            stringBuilder.Indent0().AppendLine("{");
-            stringBuilder.SetSummaryComment(
-                $"This enum is generated automatically, so it can not be edited.\nTable logical name is {LogicalName}",
-                1);
-
-            stringBuilder.AppendLine();
-            stringBuilder.Indent1().AppendLine($"public enum {PhysicalName.ConvertsSnakeToUpperCamel()}");
-            stringBuilder.Indent1().AppendLine("{");
-
-            foreach (TableDefinitionDataEntity entity in data)
-            {
-                stringBuilder.AppendLine(entity.GenerateEnumValueScript());
-            }
-
-            stringBuilder.Indent1().AppendLine("}");
-            stringBuilder.AppendLine();
-
-            stringBuilder.Indent1()
-                .AppendLine(
-                    $"public class {PhysicalName.ConvertsSnakeToUpperCamel()}Compare : IEqualityComparer<{PhysicalName.ConvertsSnakeToUpperCamel()}>");
-            stringBuilder.Indent1().AppendLine("{");
-            stringBuilder.Indent2()
-                .AppendLine(
-                    $"public bool Equals({PhysicalName.ConvertsSnakeToUpperCamel()} x, {PhysicalName.ConvertsSnakeToUpperCamel()} y) " +
-                    "{");
-            stringBuilder.Indent3().AppendLine("return x == y;");
-            stringBuilder.Indent2().AppendLine("}");
-            stringBuilder.AppendLine();
-            stringBuilder.Indent2()
-                .AppendLine($"public int GetHashCode({PhysicalName.ConvertsSnakeToUpperCamel()} obj) " + "{");
-            stringBuilder.Indent3().AppendLine("return (int)obj;");
-            stringBuilder.Indent2().AppendLine("}");
-            stringBuilder.Indent1().AppendLine("}");
-            stringBuilder.AppendLine();
-
-            stringBuilder.Indent1()
-                .AppendLine($"public static partial class {PhysicalName.ConvertsSnakeToUpperCamel()}Extensions");
-            stringBuilder.Indent1().AppendLine("{");
-
-            foreach (TableDefinitionDataEntity entity in data)
-            {
-                stringBuilder.AppendLine(entity.GenerateBooleanScript(physicalName));
-                stringBuilder.AppendLine();
-            }
-
-            stringBuilder.Indent1().AppendLine("}");
-            stringBuilder.Indent0().AppendLine("}");
-
-            return stringBuilder.ToString();
-        }
-
-        #endregion
     }
 }
-
-#endif

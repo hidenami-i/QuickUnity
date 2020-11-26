@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using QuickUnity.Runtime.Database;
+using QuickUnity.Database;
 using UnityEngine;
 
 namespace QuickUnity.Editor.Database.TableDefinition

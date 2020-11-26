@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using QuickUnity.Database;
 using QuickUnity.Editor.Utility;
 using QuickUnity.Extensions.DotNet;
-using QuickUnity.Runtime.Database;
 using UnityEngine;
 
 namespace QuickUnity.Editor.Database.TableDefinition
@@ -33,13 +33,13 @@ namespace QuickUnity.Editor.Database.TableDefinition
             this.enumDataEntityList = enumDataEntityList;
         }
 
-        public string GenerateEnumScript()
+        public string GenerateEnumScript(string nameSpace)
         {
             StringBuilder stringBuilder = new StringBuilder();
 
             stringBuilder.SetUsing("System.Collections.Generic", "System");
             stringBuilder.AppendLine();
-            stringBuilder.SetNameSpace("Database.Enumerations");
+            stringBuilder.SetNameSpace(nameSpace);
             stringBuilder.Indent0().AppendLine("{");
             stringBuilder.SetSummaryComment(
                 $"This enum is generated automatically, so it can not be edited.\nTable logical name is {enumLogicalName}",

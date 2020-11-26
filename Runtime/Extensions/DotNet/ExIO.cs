@@ -163,10 +163,10 @@ namespace QuickUnity.Extensions.DotNet
         /// <param name="fileName">File name.</param>
         public static string BinaryFormatterDeserialize(string folderPath, string fileName)
         {
-            string filePath = Path.Combine(folderPath, fileName);
+            var filePath = Path.Combine(folderPath, fileName);
             BinaryFormatter binaryFormatter = new BinaryFormatter();
             FileStream fileStream = File.Open(filePath, FileMode.Open, FileAccess.Read);
-            string saveData = (string) binaryFormatter.Deserialize(fileStream);
+            var saveData = (string) binaryFormatter.Deserialize(fileStream);
             fileStream.Close();
             return saveData;
         }
@@ -183,7 +183,7 @@ namespace QuickUnity.Extensions.DotNet
                 return;
             }
 
-            foreach (string file in Directory.GetFiles(folderPath))
+            foreach (var file in Directory.GetFiles(folderPath))
             {
                 if (containsValue == string.Empty)
                 {
@@ -198,7 +198,7 @@ namespace QuickUnity.Extensions.DotNet
                 }
             }
 
-            foreach (string subDir in Directory.GetDirectories(folderPath))
+            foreach (var subDir in Directory.GetDirectories(folderPath))
             {
                 DeleteAllFilesBy(subDir);
             }
@@ -247,8 +247,8 @@ namespace QuickUnity.Extensions.DotNet
                 return;
             }
 
-            string directoryName = Path.GetDirectoryName(filePath);
-            string destFileName = Path.Combine(directoryName, newFileName);
+            var directoryName = Path.GetDirectoryName(filePath);
+            var destFileName = Path.Combine(directoryName, newFileName);
             FileInfo newFileInfo = new FileInfo(destFileName);
             if (newFileInfo.Exists)
             {
@@ -271,8 +271,8 @@ namespace QuickUnity.Extensions.DotNet
                 return;
             }
 
-            string directoryName = Path.GetDirectoryName(filePath);
-            string destFileName = Path.Combine(directoryName, newFileName);
+            var directoryName = Path.GetDirectoryName(filePath);
+            var destFileName = Path.Combine(directoryName, newFileName);
             FileInfo newFileInfo = new FileInfo(destFileName);
             if (newFileInfo.Exists)
             {
@@ -316,20 +316,20 @@ namespace QuickUnity.Extensions.DotNet
         /// <param name="rootDirectoryPath">Folder path.</param>
         public static void DeleteAllFilesAndDirectories(string rootDirectoryPath)
         {
-            string[] filePaths = GetAllFiles(rootDirectoryPath);
+            var filePaths = GetAllFiles(rootDirectoryPath);
 
             if (filePaths.Length <= 0)
             {
                 return;
             }
 
-            foreach (string path in filePaths)
+            foreach (var path in filePaths)
             {
                 DeleteFileNotThrow(path);
             }
 
-            IEnumerable<string> direcToryPaths = GetAllDirectories(rootDirectoryPath).Reverse();
-            foreach (string path in direcToryPaths)
+            var direcToryPaths = GetAllDirectories(rootDirectoryPath).Reverse();
+            foreach (var path in direcToryPaths)
             {
                 DeleteDirectoryNotThrow(path);
             }
@@ -357,21 +357,21 @@ namespace QuickUnity.Extensions.DotNet
             Directory.CreateDirectory(destinationPath);
 
             //Now Create all of the directories
-            foreach (string dirPath in Directory.GetDirectories(sourcePath, "*", SearchOption.AllDirectories))
+            foreach (var dirPath in Directory.GetDirectories(sourcePath, "*", SearchOption.AllDirectories))
                 Directory.CreateDirectory(dirPath.Replace(sourcePath, destinationPath));
 
             //Copy all the files & Replaces any files with the same name
-            foreach (string newPath in Directory.GetFiles(sourcePath, "*.*", SearchOption.AllDirectories))
+            foreach (var newPath in Directory.GetFiles(sourcePath, "*.*", SearchOption.AllDirectories))
                 File.Copy(newPath, newPath.Replace(sourcePath, destinationPath), true);
         }
 
         public static string SanitizeFileName(string name)
         {
-            foreach (char c in Path.GetInvalidFileNameChars())
+            foreach (var c in Path.GetInvalidFileNameChars())
                 name = name.Replace(c, '_');
 
             // Remove additional special characters that Unity doesn't like
-            foreach (char c in "/:?<>*|\\~")
+            foreach (var c in "/:?<>*|\\~")
                 name = name.Replace(c, '_');
             return name.Trim();
         }

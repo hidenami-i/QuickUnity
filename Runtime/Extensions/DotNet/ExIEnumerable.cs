@@ -109,7 +109,7 @@ namespace QuickUnity.Extensions.DotNet
             this IEnumerable<TSource> source, Func<TSource, TKey> selector, IComparer<TKey> comparer
         )
         {
-            using (IEnumerator<TSource> sourceIterator = source.GetEnumerator())
+            using (var sourceIterator = source.GetEnumerator())
             {
                 if (!sourceIterator.MoveNext())
                 {
@@ -162,7 +162,7 @@ namespace QuickUnity.Extensions.DotNet
             this IEnumerable<TSource> source, Func<TSource, TKey> selector, IComparer<TKey> comparer
         )
         {
-            using (IEnumerator<TSource> sourceIterator = source.GetEnumerator())
+            using (var sourceIterator = source.GetEnumerator())
             {
                 if (!sourceIterator.MoveNext())
                 {
@@ -226,7 +226,7 @@ namespace QuickUnity.Extensions.DotNet
                 return null;
             }
 
-            int count = source.Count();
+            var count = source.Count();
             return source.Take(count / 2);
         }
     }

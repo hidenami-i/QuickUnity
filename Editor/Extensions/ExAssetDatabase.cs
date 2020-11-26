@@ -7,13 +7,13 @@ using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Editor.Extensions
+namespace QuickUnity.Editor.Extensions
 {
     public static class ExAssetDatabase
     {
         public static Object FindAsset(string filter, Type type, string fullAssetName)
         {
-            string[] guids = AssetDatabase.FindAssets(filter, null);
+            var guids = AssetDatabase.FindAssets(filter, null);
             if (guids.IsNullOrEmpty())
             {
                 Debug.LogError($"guids is null. by {filter}");
@@ -32,26 +32,26 @@ namespace Editor.Extensions
 
         public static List<string> FindAllGuidPathByType<T>(string typeName, string[] searchInFolders) where T : Object
         {
-            string name = typeName.IsNullOrEmpty() ? typeof(T).Name : typeName;
-            string searchFilter = "t:" + name;
-            string[] guids = AssetDatabase.FindAssets(searchFilter, searchInFolders);
+            var name = typeName.IsNullOrEmpty() ? typeof(T).Name : typeName;
+            var searchFilter = "t:" + name;
+            var guids = AssetDatabase.FindAssets(searchFilter, searchInFolders);
             return guids.ToList();
         }
 
         public static List<T> FindAllAssetByTypeName<T>(string typeName = "", string[] searchInFolders = null)
             where T : Object
         {
-            List<string> guidList = FindAllGuidPathByType<T>(typeName, searchInFolders);
+            var guidList = FindAllGuidPathByType<T>(typeName, searchInFolders);
 
-            List<T> list = new List<T>();
+            var list = new List<T>();
             if (guidList.IsNullOrEmpty())
             {
                 return list;
             }
 
-            foreach (string guid in guidList)
+            foreach (var guid in guidList)
             {
-                string assetPath = AssetDatabase.GUIDToAssetPath(guid);
+                var assetPath = AssetDatabase.GUIDToAssetPath(guid);
                 if (string.IsNullOrEmpty(assetPath))
                 {
                     continue;
@@ -125,13 +125,13 @@ namespace Editor.Extensions
         /// <param name="scriptLine"></param>
         public static void OpenScript(string scriptName, int scriptLine = 0)
         {
-            List<MonoScript> monoScriptList = FindAllAssetByTypeName<MonoScript>();
+            var monoScriptList = FindAllAssetByTypeName<MonoScript>();
             if (monoScriptList.IsNullOrEmpty())
             {
                 return;
             }
 
-            foreach (MonoScript monoScript in monoScriptList)
+            foreach (var monoScript in monoScriptList)
             {
                 if (AssetDatabase.OpenAsset(monoScript, scriptLine))
                 {
@@ -143,9 +143,9 @@ namespace Editor.Extensions
 
         public static string GetSelectedPathOrFallback()
         {
-            string path = "Assets";
+            var path = "Assets";
 
-            foreach (UnityEngine.Object obj in Selection.GetFiltered(typeof(UnityEngine.Object), SelectionMode.Assets))
+            foreach (Object obj in Selection.GetFiltered(typeof(Object), SelectionMode.Assets))
             {
                 path = AssetDatabase.GetAssetPath(obj);
                 if (!string.IsNullOrEmpty(path) && File.Exists(path))

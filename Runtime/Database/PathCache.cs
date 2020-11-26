@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace QuickUnity.Runtime.Database
+namespace QuickUnity.Database
 {
     /// <summary>
     /// Application path cache class for async.

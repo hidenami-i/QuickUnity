@@ -53,8 +53,8 @@ namespace QuickUnity.Extensions.DotNet
         /// <returns></returns>
         public static List<string> ToNameList<T>() where T : struct, IComparable, IFormattable, IConvertible
         {
-            List<T> list = Enum.GetValues(typeof(T)).Cast<T>().ToList();
-            List<string> result = new List<string>();
+            var list = Enum.GetValues(typeof(T)).Cast<T>().ToList();
+            var result = new List<string>();
             foreach (T item in list)
             {
                 result.Add(item.ToString());

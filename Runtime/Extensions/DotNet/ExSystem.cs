@@ -9,7 +9,7 @@ namespace QuickUnity.Extensions.DotNet
         /// </summary>
         public static string DeviceNameIfNullOrDeviceModel()
         {
-            string deviceName = SystemInfo.deviceName;
+            var deviceName = SystemInfo.deviceName;
             if (!string.IsNullOrEmpty(deviceName))
             {
                 deviceName = SystemInfo.deviceModel;

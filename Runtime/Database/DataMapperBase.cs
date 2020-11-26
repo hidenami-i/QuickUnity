@@ -1,7 +1,7 @@
 using QuickUnity.Extensions.Security;
 using UnityEngine;
 
-namespace QuickUnity.Runtime.Database
+namespace QuickUnity.Database
 {
     /// <summary>
     /// Object for persistent single entity.

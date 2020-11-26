@@ -9,8 +9,8 @@ namespace QuickUnity.Extensions.DotNet
         public static string GCSafeString(params string[] appends)
         {
             builder.Length = 0;
-            int length = appends.Length;
-            for (int i = 0; i < length; i++)
+            var length = appends.Length;
+            for (var i = 0; i < length; i++)
             {
                 builder.Append(appends[i]);
             }

@@ -1,4 +1,4 @@
-namespace QuickUnity.Runtime.Database
+namespace QuickUnity.Database
 {
     public interface ISavable
     {
@@ -24,11 +24,11 @@ namespace QuickUnity.Runtime.Database
         /// <summary>
         /// Me type Name
         /// </summary>
-        string KName { get; }
+        string Name { get; }
 
         /// <summary>
         /// Entity type name
         /// </summary>
-        string TName { get; }
+        string EntityName { get; }
     }
 }

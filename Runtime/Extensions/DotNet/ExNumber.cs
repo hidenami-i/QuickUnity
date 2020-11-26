@@ -51,9 +51,9 @@ namespace QuickUnity.Extensions.DotNet
                 throw new ArgumentException("Must put a number between 1 and 26.");
             }
 
-            int n = self % 26;
+            var n = self % 26;
             n = n == 0 ? 26 : n;
-            string s = ((char) (n + 64)).ToString();
+            var s = ((char) (n + 64)).ToString();
             if (self == n)
                 return s;
             return ((self - n) / 26).ToAlphabet() + s;

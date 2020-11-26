@@ -1,7 +1,7 @@
 using System.Text;
+using QuickUnity.Database;
 using QuickUnity.Editor.Utility;
 using QuickUnity.Extensions.DotNet;
-using QuickUnity.Runtime.Database;
 
 namespace QuickUnity.Editor.Database.TableDefinition
 {

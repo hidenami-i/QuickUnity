@@ -1,4 +1,4 @@
-﻿namespace IMDB4Unity.Editor
+﻿namespace QuickUnity.Editor.Database.Enumerations
 {
     /// <summary>
     /// Data pattern type enumerations.

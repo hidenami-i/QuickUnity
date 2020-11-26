@@ -1,6 +1,6 @@
 using System;
 
-namespace IMDB4Unity.Editor
+namespace QuickUnity.Editor.Database.Enumerations
 {
     public enum DataType
     {

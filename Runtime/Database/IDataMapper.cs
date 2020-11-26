@@ -1,4 +1,4 @@
-namespace QuickUnity.Runtime.Database
+namespace QuickUnity.Database
 {
     /// <summary>
     /// Interface for persisting a single Entity object.

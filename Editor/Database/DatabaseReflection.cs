@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace IMDB4Unity.Editor
+namespace QuickUnity.Editor.Database
 {
     public static class DatabaseReflection
     {

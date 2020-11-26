@@ -1,22 +1,22 @@
-#if UNITY_EDITOR
 using System;
 using System.Text;
+using QuickUnity.Editor.Database.Enumerations;
 using QuickUnity.Editor.Utility;
 using QuickUnity.Extensions.DotNet;
 using UnityEngine;
 
-namespace IMDB4Unity.Editor
+namespace QuickUnity.Editor.Database.TableDefinition
 {
     [Serializable]
     public class TableDefinitionDataEntity
     {
         [SerializeField] private int index = 0;
-        [SerializeField] private string logicalName = "";
-        [SerializeField] private string physicalName = "";
-        [SerializeField] private string dataType = "";
-        [SerializeField] private bool unsigned = false;
-        [SerializeField] private string defaultValue = "";
-        [SerializeField] private string relation = "";
+        [SerializeField] private string logicalName;
+        [SerializeField] private string physicalName;
+        [SerializeField] private DataType dataType;
+        [SerializeField] private bool unsigned;
+        [SerializeField] private string defaultValue;
+        [SerializeField] private string relation;
 
         /// <summary>
         /// Constructor for [T] sheet
@@ -31,79 +31,15 @@ namespace IMDB4Unity.Editor
         {
             this.logicalName = logicalName;
             this.physicalName = physicalName;
-            this.dataType = dataType;
+            this.dataType = Utility.ConvertToCSharpTypeName(dataType);
             this.defaultValue = defaultValue;
             this.relation = relation;
         }
 
-        /// <summary>
-        /// Constructor for enum.
-        /// </summary>
-        /// <param name="logicalName"></param>
-        /// <param name="physicalName"></param>
-        /// <param name="value"></param>
-        /// <param name="remarks"></param>
-        public TableDefinitionDataEntity(string logicalName, string physicalName, int value, string remarks)
-        {
-            this.logicalName = logicalName;
-            this.physicalName = physicalName;
-            this.value = value;
-            this.remarks = remarks;
-        }
-
-        #region Enumeration
-
-        // Enum
-        [SerializeField] private int value = 0;
-        [SerializeField] private string remarks = "";
-
-        public int Value => value;
-        public string Remarks => remarks;
-
-        public string GenerateEnumValueScript()
-        {
-            StringBuilder builder = new StringBuilder();
-            builder.SetSummaryComment($"[{logicalName}]", 2);
-            builder.AppendLine();
-            builder.Indent2().AppendLine($"{physicalName.ConvertsSnakeToUpperCamel()} = {value},");
-            return builder.ToString();
-        }
-
-        public string GenerateBooleanScript(string enumPhysicalName)
-        {
-            StringBuilder builder = new StringBuilder();
-            builder.SetSummaryComment(
-                $"Returns true if the {enumPhysicalName} is {physicalName.ConvertsSnakeToUpperCamel()}.",
-                2);
-            builder.AppendLine();
-            builder.Indent2()
-                .Append(
-                    $"public static bool Is{physicalName.ConvertsSnakeToUpperCamel()}(this {enumPhysicalName.ConvertsSnakeToUpperCamel()} {enumPhysicalName.ConvertsSnakeToLowerCamel()})")
-                .AppendLine(" {");
-            builder.Indent3()
-                .AppendLine(
-                    $"return {enumPhysicalName.ConvertsSnakeToLowerCamel()} == {enumPhysicalName.ConvertsSnakeToUpperCamel()}.{physicalName.ConvertsSnakeToUpperCamel()};");
-            builder.Indent2().AppendLine("}");
-            return builder.ToString();
-        }
-
-        #endregion
-
-        public SchemaType GetSchemaType()
-        {
-            if (!relation.IsNullOrEmpty())
-            {
-                return relation.Contains("[E]") ? SchemaType.Enumeration : SchemaType.Master;
-            }
-
-            return SchemaType.None;
-        }
-
+        public bool IsEnumRelation() => !relation.IsNullOrEmpty() && relation.Contains("[E]");
         public int Id => index;
         public string LogicalName => logicalName;
         public string PhysicalName => physicalName;
-        public DataType DataType => Utility.ConvertToCSharpTypeName(dataType, unsigned);
-        public bool Unsigned => unsigned;
         public string DefaultValue => defaultValue;
         public string Relation => relation;
 
@@ -112,10 +48,8 @@ namespace IMDB4Unity.Editor
         public override string ToString()
         {
             return
-                $"{nameof(index)}: {index}, {nameof(logicalName)}: {logicalName}, {nameof(physicalName)}: {physicalName}, {nameof(DataType)}: {DataType}, {nameof(unsigned)}: {unsigned}, {nameof(defaultValue)}: {defaultValue}, {nameof(relation)}: {relation}";
+                $"{nameof(index)}: {index}, {nameof(logicalName)}: {logicalName}, {nameof(physicalName)}: {physicalName}, {nameof(DataType)}: {dataType}, {nameof(unsigned)}: {unsigned}, {nameof(defaultValue)}: {defaultValue}, {nameof(relation)}: {relation}";
         }
-
-        #region generate script
 
         /// <summary>
         /// Get script of serializeField.
@@ -124,12 +58,12 @@ namespace IMDB4Unity.Editor
         {
             get
             {
-                if (GetSchemaType().IsEnumeration())
+                if (IsEnumRelation())
                 {
                     return $"[SerializeField] private {EnumType} {physicalName.ConvertsSnakeToLowerCamel()};";
                 }
 
-                DataType typeName = DataType.IsDateTime() ? DataType.String : DataType;
+                DataType typeName = dataType.IsDateTime() ? DataType.String : dataType;
                 return
                     $"[SerializeField] private {typeName.ToCsharpName()} {physicalName.ConvertsSnakeToLowerCamel()};";
             }
@@ -142,7 +76,7 @@ namespace IMDB4Unity.Editor
         {
             get
             {
-                if (DataType.IsDateTime())
+                if (dataType.IsDateTime())
                 {
                     return GenerateDateTimeCacheFieldScript;
                 }
@@ -150,7 +84,7 @@ namespace IMDB4Unity.Editor
                 StringBuilder stringBuilder = new StringBuilder();
                 stringBuilder.SetSummaryComment($"Get {logicalName}.", 2);
                 stringBuilder.AppendLine();
-                if (GetSchemaType().IsEnumeration())
+                if (IsEnumRelation())
                 {
                     stringBuilder.Indent2()
                         .AppendLine(
@@ -160,7 +94,7 @@ namespace IMDB4Unity.Editor
                 {
                     stringBuilder.Indent2()
                         .AppendLine(
-                            $"public {DataType.ToCsharpName()} {physicalName.ConvertsSnakeToUpperCamel()} => {physicalName.ConvertsSnakeToLowerCamel()};");
+                            $"public {dataType.ToCsharpName()} {physicalName.ConvertsSnakeToUpperCamel()} => {physicalName.ConvertsSnakeToLowerCamel()};");
                 }
 
                 return stringBuilder.ToString();
@@ -177,7 +111,7 @@ namespace IMDB4Unity.Editor
                 StringBuilder stringBuilder = new StringBuilder();
                 stringBuilder.SetSummaryComment($"Set {logicalName}.", 2);
                 stringBuilder.AppendLine();
-                if (GetSchemaType().IsEnumeration())
+                if (IsEnumRelation())
                 {
                     stringBuilder.Indent2()
                         .Append(
@@ -188,7 +122,7 @@ namespace IMDB4Unity.Editor
                             $"this.{physicalName.ConvertsSnakeToLowerCamel()} = {physicalName.ConvertsSnakeToLowerCamel()};");
                     stringBuilder.Indent2().AppendLine("}");
                 }
-                else if (DataType.IsDateTime())
+                else if (dataType.IsDateTime())
                 {
                     stringBuilder.Indent2()
                         .Append(
@@ -206,7 +140,7 @@ namespace IMDB4Unity.Editor
                 {
                     stringBuilder.Indent2()
                         .Append(
-                            $"public void Set{physicalName.ConvertsSnakeToUpperCamel()}({DataType.ToCsharpName()} {physicalName.ConvertsSnakeToLowerCamel()})");
+                            $"public void Set{physicalName.ConvertsSnakeToUpperCamel()}({dataType.ToCsharpName()} {physicalName.ConvertsSnakeToLowerCamel()})");
                     stringBuilder.AppendLine("{");
                     stringBuilder.Indent3()
                         .AppendLine(
@@ -225,17 +159,17 @@ namespace IMDB4Unity.Editor
         {
             get
             {
-                if (GetSchemaType().IsEnumeration())
+                if (IsEnumRelation())
                 {
                     return $"{EnumType} {PhysicalName.ConvertsSnakeToLowerCamel()}";
                 }
 
-                if (DataType.IsDateTime())
+                if (dataType.IsDateTime())
                 {
-                    return $"{DataType.ToCsharpName()}? {PhysicalName.ConvertsSnakeToLowerCamel()}";
+                    return $"{dataType.ToCsharpName()}? {PhysicalName.ConvertsSnakeToLowerCamel()}";
                 }
 
-                return $"{DataType.ToCsharpName()} {PhysicalName.ConvertsSnakeToLowerCamel()}";
+                return $"{dataType.ToCsharpName()} {PhysicalName.ConvertsSnakeToLowerCamel()}";
             }
         }
 
@@ -246,7 +180,7 @@ namespace IMDB4Unity.Editor
         {
             get
             {
-                if (DataType.IsDateTime())
+                if (dataType.IsDateTime())
                 {
                     return string.Format("this.{0} = {0}.ToString();",
                         PhysicalName.ConvertsSnakeToLowerCamel());
@@ -274,8 +208,8 @@ namespace IMDB4Unity.Editor
         {
             StringBuilder builder = new StringBuilder();
 
-            string fieldType = DataType.ToCsharpName();
-            if (GetSchemaType().IsEnumeration())
+            string fieldType = dataType.ToCsharpName();
+            if (IsEnumRelation())
             {
                 fieldType = EnumType;
             }
@@ -286,7 +220,7 @@ namespace IMDB4Unity.Editor
             builder.Indent2().AppendLine($"/// <param name=\"entity\">{className}Entity</param>");
             builder.Indent2().AppendLine("/// <returns>If Entity is not null it returns true.</returns>");
 
-            if (DataType.IsDateTime())
+            if (dataType.IsDateTime())
             {
                 builder.Indent2()
                     .Append(
@@ -311,8 +245,8 @@ namespace IMDB4Unity.Editor
         {
             StringBuilder builder = new StringBuilder();
 
-            string fieldType = DataType.ToCsharpName();
-            if (GetSchemaType().IsEnumeration())
+            string fieldType = dataType.ToCsharpName();
+            if (IsEnumRelation())
             {
                 fieldType = EnumType;
             }
@@ -321,10 +255,10 @@ namespace IMDB4Unity.Editor
                 $"Gets the {logicalName}. if the name is null or empty. it return default entity.", 2);
             builder.AppendLine();
             builder.Indent2().AppendLine($"/// <param name=\"{physicalName.ConvertsSnakeToLowerCamel()}\"></param>");
-            builder.Indent2().AppendLine($"/// <param name=\"entity\">{className}Entity</param>");
+            builder.Indent2().AppendLine($"/// <param name=\"defaultEntity\">{className}Entity</param>");
             builder.Indent2().AppendLine("/// <returns>If Entity is not null it returns default entity.</returns>");
 
-            if (DataType.IsDateTime())
+            if (dataType.IsDateTime())
             {
                 builder.Indent2()
                     .Append(
@@ -349,8 +283,8 @@ namespace IMDB4Unity.Editor
         {
             StringBuilder builder = new StringBuilder();
 
-            string fieldType = DataType.ToCsharpName();
-            if (GetSchemaType().IsEnumeration())
+            string fieldType = dataType.ToCsharpName();
+            if (IsEnumRelation())
             {
                 fieldType = EnumType;
             }
@@ -360,7 +294,7 @@ namespace IMDB4Unity.Editor
             builder.Indent2().AppendLine($"/// <param name=\"{physicalName.ConvertsSnakeToLowerCamel()}\"></param>");
             builder.Indent2().AppendLine($"/// <returns>List<{className}Entity></returns>");
 
-            if (DataType.IsDateTime())
+            if (dataType.IsDateTime())
             {
                 builder.Indent2()
                     .Append(
@@ -412,9 +346,5 @@ namespace IMDB4Unity.Editor
                 return builder.ToString();
             }
         }
-
-        #endregion
     }
 }
-
-#endif

@@ -5,17 +5,17 @@ using QuickUnity.Extensions.Security;
 using QuickUnity.Extensions.Unity;
 using UnityEngine;
 
-namespace QuickUnity.Runtime.Database
+namespace QuickUnity.Database
 {
     /// <summary>
     /// Objects for persisting multiple Entity.
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
-    /// <typeparam name="TKRepository"></typeparam>
+    /// <typeparam name="KRepository"></typeparam>
     public abstract class RepositoryBase<TEntity, KRepository> : IRepository<TEntity> where TEntity : EntityBase, new()
         where KRepository : IRepository<TEntity>, new()
     {
-        static readonly object lockObject = new object();
+        private static readonly object LockObject = new object();
 
         /// <summary>
         /// TEntity List.
@@ -65,7 +65,7 @@ namespace QuickUnity.Runtime.Database
             }
 
             var repository = JsonUtility.FromJson<KRepository>(json);
-            lock (lockObject)
+            lock (LockObject)
             {
                 EntityList.AddRange(repository.FindAll());
             }
@@ -88,7 +88,7 @@ namespace QuickUnity.Runtime.Database
                 return;
             }
 
-            lock (lockObject)
+            lock (LockObject)
             {
                 EntityList.Add(entity);
             }
@@ -103,7 +103,7 @@ namespace QuickUnity.Runtime.Database
             }
 
             TEntity entity = entityBase as TEntity;
-            lock (lockObject)
+            lock (LockObject)
             {
                 EntityList.Add(entity);
             }

@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Editor.Extensions
+namespace QuickUnity.Editor.Extensions
 {
     public class ExEditorWindow
     {

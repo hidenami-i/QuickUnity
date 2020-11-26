@@ -1,29 +1,28 @@
 using System.Collections.Generic;
 using System.IO;
-using IMDB4Unity;
 using QuickUnity.Extensions.DotNet;
 using QuickUnity.Extensions.Security;
 using QuickUnity.Extensions.Unity;
 using QuickUnity.Utility;
 
-namespace QuickUnity.Runtime.Database
+namespace QuickUnity.Database
 {
     public static class DatabaseExtensions
     {
         /// <summary>
         /// file path cache.
         /// </summary>
-        private static readonly Dictionary<string, string> filePathCache = new Dictionary<string, string>();
+        private static readonly Dictionary<string, string> FilePathCache = new Dictionary<string, string>();
 
         /// <summary>
         /// password cache.
         /// </summary>
-        private static readonly Dictionary<string, string> pCache = new Dictionary<string, string>();
+        private static readonly Dictionary<string, string> PCache = new Dictionary<string, string>();
 
         /// <summary>
         /// salt cache.
         /// </summary>
-        private static readonly Dictionary<string, string> sCache = new Dictionary<string, string>();
+        private static readonly Dictionary<string, string> SCache = new Dictionary<string, string>();
 
         /// <summary>
         /// Gets the default file path cache.
@@ -38,11 +37,11 @@ namespace QuickUnity.Runtime.Database
 
 #if UNITY_EDITOR
 
-            if (!filePathCache.TryGetValue(database.KName, out string filePath))
+            if (!FilePathCache.TryGetValue(database.EntityName, out var filePath))
             {
                 filePath = Path.Combine(DatabaseSettings.Location.RootFolderPath, "../",
-                    DatabaseSettings.Location.FolderName, database.Schema, database.KName + ".json");
-                filePathCache.Add(database.KName, filePath);
+                    DatabaseSettings.Location.FolderName, database.Schema, database.EntityName + ".json");
+                FilePathCache.Add(database.EntityName, filePath);
             }
 
 #else
@@ -62,12 +61,12 @@ namespace QuickUnity.Runtime.Database
         /// </summary>
         /// <param name="database"></param>
         /// <returns></returns>
-        private static string Password(IDatabase database)
+        private static string Password(ISavable database)
         {
-            if (!pCache.TryGetValue(database.KName, out string p))
+            if (!PCache.TryGetValue(database.EntityName, out var p))
             {
-                p = PBKDF25.Encrypt(database.KName);
-                pCache.Add(database.KName, p);
+                p = PBKDF25.Encrypt(database.EntityName);
+                PCache.Add(database.EntityName, p);
             }
 
             return p;
@@ -78,12 +77,12 @@ namespace QuickUnity.Runtime.Database
         /// </summary>
         /// <param name="database"></param>
         /// <returns></returns>
-        private static string Salt(IDatabase database)
+        private static string Salt(ISavable database)
         {
-            if (!sCache.TryGetValue(database.TName, out string s))
+            if (!SCache.TryGetValue(database.Name, out var s))
             {
-                s = PBKDF25.Encrypt(database.TName);
-                sCache.Add(database.TName, s);
+                s = PBKDF25.Encrypt(database.Name);
+                SCache.Add(database.Name, s);
             }
 
             return s;
@@ -93,7 +92,7 @@ namespace QuickUnity.Runtime.Database
         /// Default save to local.
         /// </summary>
         /// <param name="database"></param>
-        /// <param name="isDeleteContent"></param>
+        /// <param name="shouldDeleteContent"></param>
         public static void Save(this IDatabase database, bool shouldDeleteContent = false)
         {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
@@ -143,7 +142,7 @@ namespace QuickUnity.Runtime.Database
         }
 
         /// <summary>
-        /// Load from local. and initialize database instace.
+        /// Load from local. and initialize database instance.
         /// </summary>
         /// <param name="database"></param>
         /// <param name="filePath"></param>
@@ -151,7 +150,7 @@ namespace QuickUnity.Runtime.Database
         {
             if (string.IsNullOrEmpty(filePath))
             {
-                ExDebug.LogWarning($"File path is null or empty. Database name is {database.KName}");
+                ExDebug.LogWarning($"File path is null or empty. Database name is {database.EntityName}");
                 return;
             }
 
@@ -166,7 +165,7 @@ namespace QuickUnity.Runtime.Database
         /// <param name="isDeleteContent"></param>
         public static void EncryptSave(this IDatabase database, string filePath, bool isDeleteContent)
         {
-            byte[] contents = Aes128.Encrypt(isDeleteContent ? "" : database.ToJson(false), Password(database),
+            var contents = Aes128.Encrypt(isDeleteContent ? "" : database.ToJson(false), Password(database),
                 Salt(database));
             File.WriteAllBytes(filePath, contents);
             RuntimeUnityEditor.AssetDataBaseRefresh();
@@ -183,7 +182,7 @@ namespace QuickUnity.Runtime.Database
         public static void EncryptSave(this IDatabase database, string filePath, string password, string salt,
             bool isDeleteContent)
         {
-            byte[] contents = Aes128.Encrypt(isDeleteContent ? "" : database.ToJson(false), password, salt);
+            var contents = Aes128.Encrypt(isDeleteContent ? "" : database.ToJson(false), password, salt);
             File.WriteAllBytes(filePath, contents);
             RuntimeUnityEditor.AssetDataBaseRefresh();
         }
@@ -195,8 +194,8 @@ namespace QuickUnity.Runtime.Database
         /// <param name="filePath"></param>
         public static void EncryptLoad(this IDatabase database, string filePath)
         {
-            byte[] contents = ExIO.ReadAllBytes(filePath);
-            string jsonData =
+            var contents = ExIO.ReadAllBytes(filePath);
+            var jsonData =
                 System.Text.Encoding.UTF8.GetString(Aes128.Decrypt(contents, Password(database), Salt(database)));
             database.FromJson(jsonData);
         }
@@ -206,13 +205,12 @@ namespace QuickUnity.Runtime.Database
         /// </summary>
         /// <param name="database"></param>
         /// <param name="filePath"></param>
-        /// <param name="isEncrypt"></param>
         /// <param name="password"></param>
         /// <param name="salt"></param>
         public static void EncryptLoad(this IDatabase database, string filePath, string password, string salt)
         {
-            byte[] contents = ExIO.ReadAllBytes(filePath);
-            string jsonData = System.Text.Encoding.UTF8.GetString(Aes128.Decrypt(contents, password, salt));
+            var contents = ExIO.ReadAllBytes(filePath);
+            var jsonData = System.Text.Encoding.UTF8.GetString(Aes128.Decrypt(contents, password, salt));
             database.FromJson(jsonData);
         }
     }

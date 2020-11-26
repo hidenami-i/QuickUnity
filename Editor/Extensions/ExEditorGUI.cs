@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-namespace Editor.Extensions
+namespace QuickUnity.Editor.Extensions
 {
     public static class ExEditorGUI
     {
@@ -139,6 +139,14 @@ namespace Editor.Extensions
         public static void LabelFieldAsHelpBox(string label, params GUILayoutOption[] options)
         {
             EditorGUILayout.LabelField(label, EditorStyles.helpBox, options);
+        }
+
+        public static void LabelFieldWithLabelField(string label1, string label2, params GUILayoutOption[] options)
+        {
+            EditorGUILayout.BeginVertical();
+            LabelFieldAsBold(label1);
+            LabelField(label2, options);
+            EditorGUILayout.EndVertical();
         }
 
         #endregion

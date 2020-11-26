@@ -1,11 +1,10 @@
-#if UNITY_EDITOR
-
 using System;
 using System.Collections.Generic;
-using QuickUnity.Runtime.Database;
+using QuickUnity.Editor.Database.Enumerations;
+using QuickUnity.Database;
 using UnityEngine;
 
-namespace IMDB4Unity.Editor
+namespace QuickUnity.Editor.Database.TableDefinition
 {
     [Serializable]
     public class TableDefinitionRepository : RepositoryBase<TableDefinitionEntity, TableDefinitionRepository>
@@ -28,12 +27,5 @@ namespace IMDB4Unity.Editor
         {
             return FindAllBy(x => x.SchemaType.IsLocal());
         }
-
-        public List<TableDefinitionEntity> FindAllEnumerations()
-        {
-            return FindAllBy(x => x.SchemaType.IsEnumeration());
-        }
     }
 }
-
-#endif

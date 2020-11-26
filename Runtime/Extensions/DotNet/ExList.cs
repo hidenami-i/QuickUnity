@@ -122,7 +122,7 @@ namespace QuickUnity.Extensions.DotNet
         {
             if (list.IsNullOrEmpty()) return;
 
-            for (int i = 0; i < list.Count; i++)
+            for (var i = 0; i < list.Count; i++)
             {
                 var temp = list[i];
                 var randomIndex = UnityEngine.Random.Range(0, list.Count);
@@ -246,8 +246,8 @@ namespace QuickUnity.Extensions.DotNet
                 comparer = Comparer<TElement>.Default;
             }
 
-            int min = index;
-            int max = index + length - 1;
+            var min = index;
+            var max = index + length - 1;
 
             while (min <= max)
             {

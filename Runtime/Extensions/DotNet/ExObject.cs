@@ -55,7 +55,7 @@ namespace QuickUnity.Extensions.DotNet
         /// <returns></returns>
         public static Dictionary<string, object> ToDictionaryByKey(this object obj, string key)
         {
-            Dictionary<string, object> data = ToDictionary(obj);
+            var data = ToDictionary(obj);
             if (!data.TryGetValue(key, out object _))
             {
                 return new Dictionary<string, object>();
@@ -73,7 +73,7 @@ namespace QuickUnity.Extensions.DotNet
         /// <returns></returns>
         public static List<object> ToListFromDictionaryByKey(this object obj, string key)
         {
-            Dictionary<string, object> data = ToDictionary(obj);
+            var data = ToDictionary(obj);
             if (!data.TryGetValue(key, out object _))
             {
                 return new List<object>();
@@ -92,7 +92,7 @@ namespace QuickUnity.Extensions.DotNet
         /// <returns></returns>
         public static List<T> ToListFromDictionaryByKey<T>(this object obj, string key)
         {
-            Dictionary<string, object> data = ToDictionary(obj);
+            var data = ToDictionary(obj);
             if (!data.TryGetValue(key, out object _))
             {
                 return new List<T>();

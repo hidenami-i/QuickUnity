@@ -5,7 +5,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Editor.Extensions
+namespace QuickUnity.Editor.Extensions
 {
     public static class ExEditorSceneManager
     {

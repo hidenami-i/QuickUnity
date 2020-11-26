@@ -1,6 +1,4 @@
-using QuickUnity.Runtime.Database;
-
-namespace IMDB4Unity
+namespace QuickUnity.Database
 {
     public interface IDatabase : ISavable
     {

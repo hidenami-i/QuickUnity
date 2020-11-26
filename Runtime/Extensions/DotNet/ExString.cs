@@ -28,7 +28,7 @@ namespace QuickUnity.Extensions.DotNet
                 return str;
             }
 
-            int position = str.LastIndexOf(separator);
+            var position = str.LastIndexOf(separator);
             if (position == IndexNotFound)
             {
                 return str;
@@ -59,7 +59,7 @@ namespace QuickUnity.Extensions.DotNet
                 return str;
             }
 
-            string result = str.Substring(str.Length - length);
+            var result = str.Substring(str.Length - length);
             if (result.StartsWith("0"))
             {
                 return RemoveStart(result, "0");
@@ -128,7 +128,7 @@ namespace QuickUnity.Extensions.DotNet
                 return Empty;
             }
 
-            int pos = str.IndexOf(separator);
+            var pos = str.IndexOf(separator);
             if (pos == IndexNotFound)
             {
                 return Empty;
@@ -155,7 +155,7 @@ namespace QuickUnity.Extensions.DotNet
                 return Empty;
             }
 
-            int pos = str.LastIndexOf(separator);
+            var pos = str.LastIndexOf(separator);
             if (pos == IndexNotFound || pos == str.Length - separator.Length)
             {
                 return Empty;
@@ -194,10 +194,10 @@ namespace QuickUnity.Extensions.DotNet
             StringBuilder sb = new StringBuilder(length);
             Random random = new Random();
 
-            for (int i = 0; i < length; i++)
+            for (var i = 0; i < length; i++)
             {
-                int pos = random.Next(NumericChars.Length);
-                char c = NumericChars[pos];
+                var pos = random.Next(NumericChars.Length);
+                var c = NumericChars[pos];
                 sb.Append(c);
             }
 
@@ -212,10 +212,10 @@ namespace QuickUnity.Extensions.DotNet
             StringBuilder sb = new StringBuilder(length);
             Random random = new Random();
 
-            for (int i = 0; i < length; i++)
+            for (var i = 0; i < length; i++)
             {
-                int pos = random.Next(PasswordChars.Length);
-                char c = PasswordChars[pos];
+                var pos = random.Next(PasswordChars.Length);
+                var c = PasswordChars[pos];
                 sb.Append(c);
             }
 
@@ -232,10 +232,10 @@ namespace QuickUnity.Extensions.DotNet
             StringBuilder sb = new StringBuilder(length);
             Random random = new Random();
 
-            for (int i = 0; i < length; i++)
+            for (var i = 0; i < length; i++)
             {
-                int pos = random.Next(UniqueChars.Length);
-                char c = UniqueChars[pos];
+                var pos = random.Next(UniqueChars.Length);
+                var c = UniqueChars[pos];
                 sb.Append(c);
             }
 
@@ -263,13 +263,13 @@ namespace QuickUnity.Extensions.DotNet
                 return str;
             }
 
-            string camelCase =
+            var camelCase =
                 Regex.Replace(Regex.Replace(str, @"(\P{Ll})(\P{Ll}\p{Ll})", "$1 $2"), @"(\p{Ll})(\P{Ll})", "$1 $2");
-            string firstLetter = camelCase.Substring(0, 1).ToUpper();
+            var firstLetter = camelCase.Substring(0, 1).ToUpper();
 
             if (str.Length > 1)
             {
-                string rest = camelCase.Substring(1);
+                var rest = camelCase.Substring(1);
                 return firstLetter + rest;
             }
 
@@ -340,7 +340,7 @@ namespace QuickUnity.Extensions.DotNet
                 return false;
             }
 
-            foreach (char c in str)
+            foreach (var c in str)
             {
                 if (!IsHiragana(c))
                 {
@@ -361,7 +361,7 @@ namespace QuickUnity.Extensions.DotNet
                 return false;
             }
 
-            foreach (char c in str)
+            foreach (var c in str)
             {
                 if (!IsKatakana(c))
                 {
@@ -382,7 +382,7 @@ namespace QuickUnity.Extensions.DotNet
                 return false;
             }
 
-            foreach (char c in str)
+            foreach (var c in str)
             {
                 if (!IsFullWidthKatakana(c))
                 {
@@ -405,7 +405,7 @@ namespace QuickUnity.Extensions.DotNet
                 return false;
             }
 
-            foreach (char c in str)
+            foreach (var c in str)
             {
                 if (!IsKatakana(c))
                 {
@@ -450,10 +450,10 @@ namespace QuickUnity.Extensions.DotNet
                 return str;
             }
 
-            int sz = str.Length;
-            char[] chs = new char[sz];
-            int count = 0;
-            for (int i = 0; i < sz; i++)
+            var sz = str.Length;
+            var chs = new char[sz];
+            var count = 0;
+            for (var i = 0; i < sz; i++)
             {
                 if (!char.IsWhiteSpace(str.ElementAt(i)))
                 {

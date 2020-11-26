@@ -1,4 +1,4 @@
-namespace QuickUnity.Runtime.Database
+namespace QuickUnity.Database
 {
     public static class DatabaseSettings
     {

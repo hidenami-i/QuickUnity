@@ -2,15 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace QuickUnity.Runtime.Database
+namespace QuickUnity.Database
 {
     public class EntityBase
     {
         public void SetField(IDictionary<string, object> values)
         {
-            List<string> keyList = new List<string>(values.Keys);
+            var keyList = new List<string>(values.Keys);
 
-            foreach (string key in keyList)
+            foreach (var key in keyList)
             {
                 FieldInfo fieldInfo = GetType().GetField(key, BindingFlags.NonPublic | BindingFlags.Instance);
                 if (fieldInfo == null)
@@ -37,9 +37,9 @@ namespace QuickUnity.Runtime.Database
 
         public void SetProperty(IDictionary<string, object> values)
         {
-            List<string> keyList = new List<string>(values.Keys);
+            var keyList = new List<string>(values.Keys);
 
-            foreach (string key in keyList)
+            foreach (var key in keyList)
             {
                 PropertyInfo propertyInfo = GetType().GetProperty(key);
                 if (propertyInfo == null)

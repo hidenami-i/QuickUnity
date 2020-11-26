@@ -1,4 +1,6 @@
-namespace IMDB4Unity.Editor
+using QuickUnity.Editor.Database.Enumerations;
+
+namespace QuickUnity.Editor.Database
 {
     internal static class Utility
     {
@@ -7,8 +9,7 @@ namespace IMDB4Unity.Editor
         /// </summary>
         /// <returns>type</returns>
         /// <param name="dbTypeName">type name on database.</param>
-        /// <param name="unsigned">unsinged is true</param>
-        public static DataType ConvertToCSharpTypeName(string dbTypeName, bool unsigned)
+        public static DataType ConvertToCSharpTypeName(string dbTypeName)
         {
             string dbTypeNameToLower = dbTypeName.ToLower();
 
@@ -97,7 +98,7 @@ namespace IMDB4Unity.Editor
                 case "string":
                 case "json":
                 case "jsonarray":
-
+                case "text":
                     return DataType.String;
 
                 // 1970-01-01 00:00:01' UTC ～ '2038-01-19 03:14:07' UTC

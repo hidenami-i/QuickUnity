@@ -6,6 +6,10 @@
   "unity": "2019.4",
   "license": "MIT",
   "author": "hidenami-i",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hidenami-i/QuickUnity.git"
+  },
   "dependencies": {
     "com.cysharp.unitask": "2.0.37"
   },

@@ -1,8 +1,8 @@
 {
   "name": "jp.hidenami-i.quickunity",
   "displayName": "QuickUnity",
-  "description": "Simple Unity Extensions And Utility.",
-  "version": "1.0.0",
+  "description": "Simple And Easy Unity Library.",
+  "version": "0.1.0",
   "unity": "2019.4",
   "license": "MIT",
   "author": "hidenami-i",

@@ -13,14 +13,14 @@ namespace QuickUnity.Networking
         public static async UniTask<NTPResponse> GetAsync()
         {
             var realtimeSinceStartup = Time.realtimeSinceStartup;
-            QuickResponse response = await QuickWebRequest.GetAsyncAsQuickResponse(Uri);
+            QuickWebResponse webResponse = await QuickWebRequest.GetAsync(Uri);
 
-            if (response.HasError(out QuickRequestException exception))
+            if (webResponse.HasError(out QuickRequestException exception))
             {
                 return new NTPResponse(exception);
             }
 
-            NTPResponse ntpResponse = JsonUtility.FromJson<NTPResponse>(response.GetText());
+            NTPResponse ntpResponse = JsonUtility.FromJson<NTPResponse>(webResponse.GetText());
 
             //　Adjusts the latency of the communication from the server to the client.
             var latency = Time.realtimeSinceStartup - realtimeSinceStartup;

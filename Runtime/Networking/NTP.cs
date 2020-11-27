@@ -13,7 +13,7 @@ namespace QuickUnity.Networking
         public static async UniTask<NTPResponse> GetAsync()
         {
             var realtimeSinceStartup = Time.realtimeSinceStartup;
-            QuickResponse response = await QuickRequest.GetAsyncAsQuickResponse(Uri);
+            QuickResponse response = await QuickWebRequest.GetAsyncAsQuickResponse(Uri);
 
             if (response.HasError(out QuickRequestException exception))
             {

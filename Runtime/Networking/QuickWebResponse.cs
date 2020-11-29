@@ -1,5 +1,4 @@
-﻿using System.Net;
-using System.Text;
+﻿using System.Text;
 using UnityEngine.Networking;
 
 namespace QuickUnity.Networking
@@ -7,79 +6,28 @@ namespace QuickUnity.Networking
     /// <summary>
     /// network response for UnityWebRequest api class.
     /// </summary>
-    public class QuickWebResponse
+    public class QuickWebResponse : QuickWebResponseBase
     {
-        /// <summary>
-        /// response data
-        /// </summary>
-        private readonly byte[] data;
+        private byte[] Data { get; } = new byte[0];
 
-        private readonly QuickRequestException requestException;
-
-        public QuickWebResponse(UnityWebRequest request)
+        public QuickWebResponse(UnityWebRequest request) : base(request)
         {
-            using (request)
-            {
-                if (request.result == UnityWebRequest.Result.ConnectionError ||
-                    request.result == UnityWebRequest.Result.ProtocolError ||
-                    request.result == UnityWebRequest.Result.DataProcessingError)
-                {
-                    requestException = new QuickRequestException(request);
-                    return;
-                }
-
-                Url = request.url;
-                HttpStatusCode responseCode = (HttpStatusCode) request.responseCode;
-
-                // 200 <= code <= 299
-                if (HttpStatusCode.OK <= responseCode && responseCode < HttpStatusCode.Ambiguous)
-                {
-                    data = request.downloadHandler.data;
-                }
-                else
-                {
-                    requestException = new QuickRequestException(request);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets request url.
-        /// </summary>
-        public string Url { get; }
-
-        /// <summary>
-        /// Gets response byte data.
-        /// </summary>
-        /// <returns></returns>
-        public byte[] GetData()
-        {
-            return data;
+            Data = request.downloadHandler.data;
+            request.Dispose();
         }
 
         /// <summary>
         /// Gets response text data.
         /// </summary>
         /// <returns></returns>
-        public string GetText()
+        public string Result()
         {
-            if (data != null && data.Length > 0)
+            if (Data != null && Data.Length > 0)
             {
-                return Encoding.UTF8.GetString(data);
+                return Encoding.UTF8.GetString(Data);
             }
 
             return "";
-        }
-
-        public bool HasError()
-        {
-            return requestException != null;
-        }
-
-        public bool HasError(out QuickRequestException exception)
-        {
-            exception = requestException;
-            return requestException != null;
         }
     }
 }

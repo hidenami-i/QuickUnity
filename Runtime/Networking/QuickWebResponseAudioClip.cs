@@ -3,14 +3,14 @@ using UnityEngine.Networking;
 
 namespace QuickUnity.Networking
 {
-    public class QuickWebResponseAudioClip
+    public class QuickWebResponseAudioClip : QuickWebResponseBase
     {
-        public QuickWebResponseAudioClip(UnityWebRequest request)
+        public AudioClip Result { get; }
+
+        public QuickWebResponseAudioClip(UnityWebRequest request) : base(request)
         {
-            using (request)
-            {
-                AudioClip audioClip = DownloadHandlerAudioClip.GetContent(request);
-            }
+            Result = DownloadHandlerAudioClip.GetContent(request);
+            request.Dispose();
         }
     }
 }

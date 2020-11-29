@@ -20,7 +20,7 @@ namespace QuickUnity.Networking
                 return new NTPResponse(exception);
             }
 
-            NTPResponse ntpResponse = JsonUtility.FromJson<NTPResponse>(webResponse.GetText());
+            NTPResponse ntpResponse = JsonUtility.FromJson<NTPResponse>(webResponse.Result());
 
             //　Adjusts the latency of the communication from the server to the client.
             var latency = Time.realtimeSinceStartup - realtimeSinceStartup;

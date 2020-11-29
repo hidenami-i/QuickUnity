@@ -8,7 +8,7 @@ namespace QuickUnity.Networking
     /// </summary>
     public sealed class QuickWebResponse : QuickWebResponseBase, IWebResponse<string>
     {
-        private byte[] Data { get; } = new byte[0];
+        public byte[] Data { get; }
 
         public QuickWebResponse(UnityWebRequest request) : base(request)
         {

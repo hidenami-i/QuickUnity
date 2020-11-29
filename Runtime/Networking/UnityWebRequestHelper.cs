@@ -1,5 +1,8 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using QuickUnity.Extensions.Unity;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -8,7 +11,7 @@ namespace QuickUnity.Networking
     public static class UnityWebRequestHelper
     {
         /// <summary>
-        /// Async get Request.
+        /// HTTP GET requests asynchronously.
         /// </summary>
         /// <param name="uri"></param>
         /// <param name="headers"></param>
@@ -23,7 +26,7 @@ namespace QuickUnity.Networking
         }
 
         /// <summary>
-        /// Async post request.
+        /// HTTP POST requests asynchronously.
         /// </summary>
         /// <param name="uri"></param>
         /// <param name="postData"></param>
@@ -40,7 +43,7 @@ namespace QuickUnity.Networking
         }
 
         /// <summary>
-        /// Async post request.
+        /// HTTP POST requests asynchronously.
         /// </summary>
         /// <param name="uri"></param>
         /// <param name="form"></param>
@@ -57,7 +60,7 @@ namespace QuickUnity.Networking
         }
 
         /// <summary>
-        /// Async put string request.
+        /// HTTP PUT requests asynchronously.
         /// </summary>
         /// <param name="uri"></param>
         /// <param name="bodyData"></param>
@@ -74,7 +77,7 @@ namespace QuickUnity.Networking
         }
 
         /// <summary>
-        /// Async put byte[] request.
+        /// HTTP PUT requests asynchronously.
         /// </summary>
         /// <param name="uri"></param>
         /// <param name="bodyData"></param>
@@ -91,7 +94,7 @@ namespace QuickUnity.Networking
         }
 
         /// <summary>
-        /// Async delete request.
+        /// HTTP DELETE requests asynchronously.
         /// </summary>
         /// <param name="uri"></param>
         /// <param name="headers"></param>
@@ -131,6 +134,61 @@ namespace QuickUnity.Networking
             }
 
             return await request.SendWebRequest();
+        }
+
+        private static IEnumerator FetchAsCoroutine(UnityWebRequest request, Action<UnityWebRequest> completed,
+            Dictionary<string, string> headers, int timeoutSec, bool chunkedTransfer, UploadHandler uploadHandler,
+            DownloadHandler downloadHandler)
+        {
+            if (headers != null)
+            {
+                foreach (var header in headers)
+                {
+                    request.SetRequestHeader(header.Key, header.Value);
+                }
+            }
+
+            // request.chunkedTransfer = chunkedTransfer;
+            request.timeout = timeoutSec;
+
+            if (uploadHandler != null)
+            {
+                request.uploadHandler = uploadHandler;
+            }
+
+            if (downloadHandler != null)
+            {
+                request.downloadHandler = downloadHandler;
+            }
+
+            UnityWebRequestAsyncOperation operation = request.SendWebRequest();
+
+            while (true)
+            {
+                if (request.result == UnityWebRequest.Result.ProtocolError ||
+                    request.result == UnityWebRequest.Result.ConnectionError)
+                {
+                    Debug.LogError(request.error);
+                    yield break;
+                }
+
+                if (operation.isDone)
+                {
+                    yield break;
+                }
+
+                yield return null;
+
+                ulong size = 0;
+                var responseHeader = request.GetResponseHeader("Content-Length");
+                if (responseHeader != null)
+                {
+                    ulong.TryParse(responseHeader, out size);
+                }
+
+                ExDebug.Log($"progress : {operation.progress}");
+                ExDebug.Log($"download size : {request.downloadedBytes}, size : {size}");
+            }
         }
     }
 }

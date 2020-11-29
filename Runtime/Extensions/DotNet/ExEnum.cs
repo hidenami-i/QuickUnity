@@ -10,7 +10,7 @@ namespace QuickUnity.Extensions.DotNet
         /// Cast the enumerated type to the IEnumerable type and return it.
         /// </summary>
         /// <typeparam name="T">The 1st type parameter.</typeparam>
-        public static IEnumerable<T> ToIEnumerable<T>() where T : struct, IComparable, IFormattable, IConvertible
+        public static IEnumerable<T> ToIEnumerable<T>() where T : Enum
         {
             return Enum.GetValues(typeof(T)).Cast<T>();
         }
@@ -20,17 +20,17 @@ namespace QuickUnity.Extensions.DotNet
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static List<T> ToList<T>() where T : struct, IComparable, IFormattable, IConvertible
+        public static List<T> ToList<T>() where T : Enum
         {
             return Enum.GetValues(typeof(T)).Cast<T>().ToList();
         }
 
-        public static string GetName<T>(T value) where T : struct, IComparable, IFormattable, IConvertible
+        public static string GetName<T>(T value) where T : Enum
         {
             return Enum.GetName(typeof(T), value);
         }
 
-        public static string Format<T>(T value, string format) where T : struct, IComparable, IFormattable, IConvertible
+        public static string Format<T>(T value, string format) where T : Enum
         {
             return Enum.Format(typeof(T), value, format);
         }
@@ -41,7 +41,7 @@ namespace QuickUnity.Extensions.DotNet
         /// <param name="value"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static T FromInt<T>(int value) where T : struct, IComparable, IFormattable, IConvertible
+        public static T FromInt<T>(int value) where T : Enum
         {
             return (T) Enum.ToObject(typeof(T), value);
         }
@@ -51,7 +51,7 @@ namespace QuickUnity.Extensions.DotNet
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static List<string> ToNameList<T>() where T : struct, IComparable, IFormattable, IConvertible
+        public static List<string> ToNameList<T>() where T : Enum
         {
             var list = Enum.GetValues(typeof(T)).Cast<T>().ToList();
             var result = new List<string>();
@@ -66,7 +66,7 @@ namespace QuickUnity.Extensions.DotNet
         /// <summary>
         /// Gets the number of items defined by the enumeration type.
         /// </summary>
-        public static int Count<T>() where T : struct, IComparable, IFormattable, IConvertible
+        public static int Count<T>() where T : Enum
         {
             return Enum.GetNames(typeof(T)).CountIfNullZero();
         }
@@ -77,7 +77,7 @@ namespace QuickUnity.Extensions.DotNet
         /// <returns>The enum.</returns>
         /// <param name="value">Value.</param>
         /// <typeparam name="T">The 1st type parameter.</typeparam>
-        public static T FromString<T>(string value) where T : struct, IComparable, IFormattable, IConvertible
+        public static T FromString<T>(string value) where T : Enum
         {
             return (T) Enum.Parse(typeof(T), value, false);
         }
@@ -85,7 +85,7 @@ namespace QuickUnity.Extensions.DotNet
         /// <summary>
         /// Returns whether the specified string can be converted to an enumerated type or not.
         /// </summary>
-        public static bool IsEnum<T>(string value) where T : struct, IComparable, IFormattable, IConvertible
+        public static bool IsEnum<T>(string value) where T : Enum
         {
             return TryParse(value, out T _);
         }
@@ -93,8 +93,7 @@ namespace QuickUnity.Extensions.DotNet
         /// <summary>
         /// Returns whether the conversion of the specified string to an enumerated type was successful or not.
         /// </summary>
-        public static bool TryParse<T>(string value, out T result)
-            where T : struct, IComparable, IFormattable, IConvertible
+        public static bool TryParse<T>(string value, out T result) where T : Enum
         {
             return TryParse(value, true, out result);
         }
@@ -102,8 +101,7 @@ namespace QuickUnity.Extensions.DotNet
         /// <summary>
         /// Returns whether the conversion of the specified string to an enumerated type was successful or not.
         /// </summary>
-        public static bool TryParse<T>(string value, bool ignoreCase, out T result)
-            where T : struct, IComparable, IFormattable, IConvertible
+        public static bool TryParse<T>(string value, bool ignoreCase, out T result) where T : Enum
         {
             try
             {

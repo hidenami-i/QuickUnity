@@ -3,14 +3,16 @@ using UnityEngine.Networking;
 
 namespace QuickUnity.Networking
 {
-    public class QuickWebResponseTexture : QuickWebResponseBase
+    public sealed class QuickWebResponseTexture : QuickWebResponseBase, IWebResponse<Texture2D>
     {
-        public Texture2D Result { get; } = Texture2D.whiteTexture;
+        private readonly Texture2D result;
 
         public QuickWebResponseTexture(UnityWebRequest request) : base(request)
         {
-            Result = DownloadHandlerTexture.GetContent(request);
+            result = DownloadHandlerTexture.GetContent(request);
             request.Dispose();
         }
+
+        public Texture2D Result() => result;
     }
 }

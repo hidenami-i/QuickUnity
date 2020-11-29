@@ -6,7 +6,7 @@ namespace QuickUnity.Networking
     /// <summary>
     /// network response for UnityWebRequest api class.
     /// </summary>
-    public class QuickWebResponse : QuickWebResponseBase
+    public sealed class QuickWebResponse : QuickWebResponseBase, IWebResponse<string>
     {
         private byte[] Data { get; } = new byte[0];
 

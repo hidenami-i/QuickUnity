@@ -43,7 +43,8 @@ namespace QuickUnity.Networking
         {
             UnityWebRequest request = UnityWebRequestTexture.GetTexture(uri, nonReadable);
             UnityWebRequest result =
-                await UnityWebRequestHelper.Fetch(request, headers, timeoutSec, uploadHandler, downloadHandler);
+                await UnityWebRequestHelper.SendWebRequest(request, headers, timeoutSec, uploadHandler,
+                    downloadHandler);
             return new QuickWebResponseTexture(result);
         }
 
@@ -64,7 +65,8 @@ namespace QuickUnity.Networking
         {
             UnityWebRequest request = UnityWebRequestMultimedia.GetAudioClip(uri, audioType);
             UnityWebRequest result =
-                await UnityWebRequestHelper.Fetch(request, headers, timeoutSec, uploadHandler, downloadHandler);
+                await UnityWebRequestHelper.SendWebRequest(request, headers, timeoutSec, uploadHandler,
+                    downloadHandler);
             return new QuickWebResponseTexture(result);
         }
 
@@ -84,7 +86,8 @@ namespace QuickUnity.Networking
         {
             UnityWebRequest request = UnityWebRequestAssetBundle.GetAssetBundle(uri, crc);
             UnityWebRequest result =
-                await UnityWebRequestHelper.Fetch(request, headers, timeoutSec, uploadHandler, downloadHandler);
+                await UnityWebRequestHelper.SendWebRequest(request, headers, timeoutSec, uploadHandler,
+                    downloadHandler);
             return new QuickWebResponseTexture(result);
         }
 
@@ -179,7 +182,8 @@ namespace QuickUnity.Networking
             DownloadHandler downloadHandler)
         {
             UnityWebRequest result =
-                await UnityWebRequestHelper.Fetch(request, headers, timeoutSec, uploadHandler, downloadHandler);
+                await UnityWebRequestHelper.SendWebRequest(request, headers, timeoutSec, uploadHandler,
+                    downloadHandler);
             return new QuickWebResponse(result);
         }
     }

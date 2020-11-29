@@ -22,7 +22,7 @@ namespace QuickUnity.Networking
             int timeoutSec = 60, UploadHandler uploadHandler = null, DownloadHandler downloadHandler = null)
         {
             UnityWebRequest request = UnityWebRequest.Get(uri);
-            return await Fetch(request, headers, timeoutSec, uploadHandler, downloadHandler);
+            return await SendWebRequest(request, headers, timeoutSec, uploadHandler, downloadHandler);
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace QuickUnity.Networking
             DownloadHandler downloadHandler = null)
         {
             UnityWebRequest request = UnityWebRequest.Post(uri, postData);
-            return await Fetch(request, headers, timeoutSec, uploadHandler, downloadHandler);
+            return await SendWebRequest(request, headers, timeoutSec, uploadHandler, downloadHandler);
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace QuickUnity.Networking
             DownloadHandler downloadHandler = null)
         {
             UnityWebRequest request = UnityWebRequest.Post(uri, form);
-            return await Fetch(request, headers, timeoutSec, uploadHandler, downloadHandler);
+            return await SendWebRequest(request, headers, timeoutSec, uploadHandler, downloadHandler);
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace QuickUnity.Networking
             DownloadHandler downloadHandler = null)
         {
             UnityWebRequest request = UnityWebRequest.Put(uri, bodyData);
-            return await Fetch(request, headers, timeoutSec, uploadHandler, downloadHandler);
+            return await SendWebRequest(request, headers, timeoutSec, uploadHandler, downloadHandler);
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace QuickUnity.Networking
             DownloadHandler downloadHandler = null)
         {
             UnityWebRequest request = UnityWebRequest.Put(uri, bodyData);
-            return await Fetch(request, headers, timeoutSec, uploadHandler, downloadHandler);
+            return await SendWebRequest(request, headers, timeoutSec, uploadHandler, downloadHandler);
         }
 
         /// <summary>
@@ -105,10 +105,10 @@ namespace QuickUnity.Networking
             int timeoutSec = 60, UploadHandler uploadHandler = null, DownloadHandler downloadHandler = null)
         {
             UnityWebRequest request = UnityWebRequest.Delete(uri);
-            return await Fetch(request, headers, timeoutSec, uploadHandler, downloadHandler);
+            return await SendWebRequest(request, headers, timeoutSec, uploadHandler, downloadHandler);
         }
 
-        internal static async UniTask<UnityWebRequest> Fetch(UnityWebRequest request,
+        internal static async UniTask<UnityWebRequest> SendWebRequest(UnityWebRequest request,
             Dictionary<string, string> headers,
             int timeoutSec, UploadHandler uploadHandler,
             DownloadHandler downloadHandler)
@@ -136,7 +136,7 @@ namespace QuickUnity.Networking
             return await request.SendWebRequest();
         }
 
-        private static IEnumerator FetchAsCoroutine(UnityWebRequest request, Action<UnityWebRequest> completed,
+        private static IEnumerator SendWebRequestAsCoroutine(UnityWebRequest request, Action<UnityWebRequest> completed,
             Dictionary<string, string> headers, int timeoutSec, bool chunkedTransfer, UploadHandler uploadHandler,
             DownloadHandler downloadHandler)
         {

@@ -14,13 +14,13 @@ namespace QuickUnity.Editor.Menu
             CreateFile("Sample.txt");
         }
 
-        [MenuItem("Assets/CreateFile/Sample.md")]
+        [MenuItem("Assets/QuickUnity/CreateFile/ample.md")]
         public static void CreateReadMeFile()
         {
             CreateFile("Sample.md");
         }
 
-        [MenuItem("Assets/CreateFile/Sample.json")]
+        [MenuItem("Assets/QuickUnity/CreateFile/Sample.json")]
         public static void CreateJsonFile()
         {
             CreateFile("Sample.json");

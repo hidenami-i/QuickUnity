@@ -22,6 +22,38 @@ namespace QuickUnity.Extensions.Unity
             UnityEngine.Object.Destroy(self);
         }
 
+        /// <summary>
+        /// Gets all descendants
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <returns></returns>
+        public static List<GameObject> Descendants(this GameObject parent)
+        {
+            var list = new List<GameObject>();
+            if (!parent.HasChild())
+            {
+                return list;
+            }
+
+            var transforms = parent.GetComponentsInChildren<Transform>();
+            foreach (Transform transform in transforms)
+            {
+                list.Add(transform.gameObject);
+            }
+
+            return list;
+        }
+
+        /// <summary>
+        /// Determine if there are any child objects.
+        /// </summary>
+        /// <param name="gameObject"></param>
+        /// <returns></returns>
+        public static bool HasChild(this GameObject gameObject)
+        {
+            return 0 < gameObject.transform.childCount;
+        }
+
         public static void SetActiveNotThrow(this GameObject self, bool active = true)
         {
             if (self.IsNull()) return;

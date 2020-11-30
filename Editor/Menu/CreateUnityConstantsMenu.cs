@@ -13,11 +13,13 @@ namespace QuickUnity.Editor.Menu
 {
     public static class CreateUnityConstantsMenu
     {
+        private static readonly string RootPath =
+            Path.Combine(Application.dataPath, "App/auto_generated/Scripts/Constants");
+
         [MenuItem("QuickUnity/Generate Constants")]
         private static void Execute(MenuCommand cmd)
         {
-            var rootPath = Path.Combine(Application.dataPath, "App/Scripts/Constants");
-            ExIO.CreateDirectoryNotExist(rootPath);
+            ExIO.CreateDirectoryNotExist(RootPath);
 
             try
             {
@@ -57,15 +59,12 @@ namespace QuickUnity.Editor.Menu
             builder.Indent1().AppendLine("}");
             builder.AppendLine("}");
 
-            var rootPath = Path.Combine(Application.dataPath, "App/Scripts/Constants");
-            ExIO.CreateDirectoryNotExist(rootPath);
+            ExIO.CreateDirectoryNotExist(RootPath);
 
             var fileName = $"{className}.cs";
-            ExIO.WriteAllTextAsUTF8(rootPath, fileName, builder.ToString());
+            ExIO.WriteAllTextAsUTF8(RootPath, fileName, builder.ToString());
             AssetDatabase.Refresh(ImportAssetOptions.ImportRecursive);
         }
-
-        #region Layer
 
         private static void LayerNameStringBuilder(StringBuilder builder)
         {
@@ -94,10 +93,6 @@ namespace QuickUnity.Editor.Menu
             }
         }
 
-        #endregion
-
-        #region SortingLayer
-
         private static void SortingLayerStringBuilder(StringBuilder builder)
         {
             Type type = typeof(InternalEditorUtility);
@@ -112,10 +107,6 @@ namespace QuickUnity.Editor.Menu
                 builder.Indent2().AppendLine($"public const string {key} = \"{name}\";");
             }
         }
-
-        #endregion
-
-        #region Prefab
 
         private static void PrefabPathStringBuilder(StringBuilder builder)
         {
@@ -136,10 +127,6 @@ namespace QuickUnity.Editor.Menu
                     prefabPath).AppendLine();
             }
         }
-
-        #endregion
-
-        #region SceneBuildIndex
 
         private static void SceneBuildIndexStringBuilder(StringBuilder builder)
         {
@@ -169,10 +156,6 @@ namespace QuickUnity.Editor.Menu
             }
         }
 
-        #endregion
-
-        #region Tag
-
         private static void TagStringBuilder(StringBuilder builder)
         {
             var tags = InternalEditorUtility.tags;
@@ -187,8 +170,6 @@ namespace QuickUnity.Editor.Menu
                 builder.Indent2().AppendLine($@"public const string {name} = ""{name}"";");
             }
         }
-
-        #endregion
 
         private static readonly string[] InvalidChars =
         {

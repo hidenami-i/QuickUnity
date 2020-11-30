@@ -240,7 +240,10 @@ namespace QuickUnity.Editor.Database.Window
                     labels: labels);
             }
 
-            AssetDatabase.Refresh();
+            spreadsheet =
+                await spreadSheetSettingAsset.GetSheetService().Spreadsheets
+                    .Get(spreadsheetId: spreadSheetInfo.SpreadSheetId)
+                    .ExecuteAsync();
 
             var tList = spreadsheet.Sheets.Where(predicate: x => x.Properties.Title.Contains(value: "[T]")).ToList();
             foreach (Sheet sheet in tList)
@@ -336,6 +339,7 @@ namespace QuickUnity.Editor.Database.Window
             }
 
             AssetDatabase.Refresh();
+            EditorUtility.DisplayDialog("Database Generate Completed", "", "OK");
             EditorUtility.ClearProgressBar();
         }
 

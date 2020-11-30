@@ -45,7 +45,7 @@ namespace QuickUnity.Editor.Menu
 
         private static void GenerateScript(string className, Action<StringBuilder> action)
         {
-            var builder = new StringBuilder();
+            StringBuilder builder = new StringBuilder();
 
             builder.SetNameSpace("App");
             builder.AppendLine("{");

@@ -55,18 +55,13 @@ namespace QuickUnity.Editor.Database.TableDefinition
             }
         }
 
-        private string ClassName => PhysicalName.ConvertsSnakeToUpperCamel();
-        public string EntityScriptFileName => PhysicalName.ConvertsSnakeToUpperCamel() + "Entity.cs";
-        public string EntityServiceScriptFileName => PhysicalName.ConvertsSnakeToUpperCamel() + "EntityService.cs";
-        public string RepositoryScriptFileName => PhysicalName.ConvertsSnakeToUpperCamel() + "Repository.cs";
-
-        public string RepositoryServiceScriptFileName =>
-            PhysicalName.ConvertsSnakeToUpperCamel() + "RepositoryService.cs";
-
-        public string DataMapperScriptFileName => PhysicalName.ConvertsSnakeToUpperCamel() + "DataMapper.cs";
-
-        public string DataMapperServiceScriptFileName =>
-            PhysicalName.ConvertsSnakeToUpperCamel() + "DataMapperService.cs";
+        private string ClassName => schema.ConvertsSnakeToUpperCamel() + PhysicalName.ConvertsSnakeToUpperCamel();
+        public string EntityScriptFileName => ClassName + "Entity.cs";
+        public string EntityServiceScriptFileName => ClassName + "EntityService.cs";
+        public string RepositoryScriptFileName => ClassName + "Repository.cs";
+        public string RepositoryServiceScriptFileName => ClassName + "RepositoryService.cs";
+        public string DataMapperScriptFileName => ClassName + "DataMapper.cs";
+        public string DataMapperServiceScriptFileName => ClassName + "DataMapperService.cs";
 
         /// <summary>
         /// Generate Entity Classes.

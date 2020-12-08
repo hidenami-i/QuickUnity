@@ -18,6 +18,7 @@ namespace QuickUnity.Editor.Database.TableDefinition
         [SerializeField] private bool unsigned;
         [SerializeField] private string defaultValue;
         [SerializeField] private string relation;
+        [SerializeField] private string description;
 
         /// <summary>
         /// Constructor for [T] sheet
@@ -27,8 +28,9 @@ namespace QuickUnity.Editor.Database.TableDefinition
         /// <param name="dataType"></param>
         /// <param name="defaultValue"></param>
         /// <param name="relation"></param>
+        /// <param name="description"></param>
         public TableDefinitionDataEntity(string logicalName, string physicalName, string dataType, string defaultValue,
-            string relation)
+            string relation, string description)
         {
             this.logicalName = logicalName;
             this.physicalName = physicalName;
@@ -36,6 +38,7 @@ namespace QuickUnity.Editor.Database.TableDefinition
             this.cSharpDataType = Utility.ConvertToCSharpTypeName(dataType);
             this.defaultValue = defaultValue;
             this.relation = relation;
+            this.description = description;
         }
 
         public bool IsEnumRelation() => !relation.IsNullOrEmpty() && relation.Contains("[E]");
@@ -46,6 +49,7 @@ namespace QuickUnity.Editor.Database.TableDefinition
         public CSharpDataType CSharpDataType => cSharpDataType;
         public string DefaultValue => defaultValue;
         public string Relation => relation;
+        public string Description => description;
 
         public string EnumType => relation.Replace("[E]", "").ConvertsSnakeToUpperCamel();
 

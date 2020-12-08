@@ -387,6 +387,7 @@ namespace QuickUnity.Editor.Database.Window
                 var dataType = row.ElementAtOrDefault(index: 3)?.ToString();
                 var defaultValue = row.ElementAtOrDefault(index: 6)?.ToString();
                 var relation = row.ElementAtOrDefault(index: 7)?.ToString();
+                var description = row.ElementAtOrDefault(index: 9)?.ToString();
 
                 if (index.IsZero() || index.IsNegative())
                 {
@@ -402,7 +403,7 @@ namespace QuickUnity.Editor.Database.Window
                 TableDefinitionDataEntity entity =
                     new TableDefinitionDataEntity(logicalName: fieldLogicalName, physicalName: fieldPhysicalName,
                         dataType: dataType, defaultValue: defaultValue,
-                        relation: relation);
+                        relation: relation, description: description);
 
                 result.Add(item: entity);
             }

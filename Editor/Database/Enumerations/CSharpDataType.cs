@@ -45,7 +45,7 @@ namespace QuickUnity.Editor.Database.Enumerations
         DateTime
     }
 
-    public static class DataTypeExtensions
+    public static class CSharpDataTypeExtensions
     {
         public static bool IsInt(this CSharpDataType cSharpDataType) => cSharpDataType == CSharpDataType.Int;
         public static bool IsLong(this CSharpDataType cSharpDataType) => cSharpDataType == CSharpDataType.Long;

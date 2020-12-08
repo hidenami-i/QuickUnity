@@ -13,7 +13,8 @@ namespace QuickUnity.Editor.Database.TableDefinition
         [SerializeField] private int index = 0;
         [SerializeField] private string logicalName;
         [SerializeField] private string physicalName;
-        [SerializeField] private DataType dataType;
+        [SerializeField] private string dataType;
+        [SerializeField] private CSharpDataType cSharpDataType;
         [SerializeField] private bool unsigned;
         [SerializeField] private string defaultValue;
         [SerializeField] private string relation;
@@ -31,7 +32,8 @@ namespace QuickUnity.Editor.Database.TableDefinition
         {
             this.logicalName = logicalName;
             this.physicalName = physicalName;
-            this.dataType = Utility.ConvertToCSharpTypeName(dataType);
+            this.dataType = dataType;
+            this.cSharpDataType = Utility.ConvertToCSharpTypeName(dataType);
             this.defaultValue = defaultValue;
             this.relation = relation;
         }
@@ -40,6 +42,8 @@ namespace QuickUnity.Editor.Database.TableDefinition
         public int Id => index;
         public string LogicalName => logicalName;
         public string PhysicalName => physicalName;
+        public string DataType => dataType;
+        public CSharpDataType CSharpDataType => cSharpDataType;
         public string DefaultValue => defaultValue;
         public string Relation => relation;
 
@@ -48,7 +52,7 @@ namespace QuickUnity.Editor.Database.TableDefinition
         public override string ToString()
         {
             return
-                $"{nameof(index)}: {index}, {nameof(logicalName)}: {logicalName}, {nameof(physicalName)}: {physicalName}, {nameof(DataType)}: {dataType}, {nameof(unsigned)}: {unsigned}, {nameof(defaultValue)}: {defaultValue}, {nameof(relation)}: {relation}";
+                $"{nameof(index)}: {index}, {nameof(logicalName)}: {logicalName}, {nameof(physicalName)}: {physicalName}, {nameof(CSharpDataType)}: {cSharpDataType}, {nameof(unsigned)}: {unsigned}, {nameof(defaultValue)}: {defaultValue}, {nameof(relation)}: {relation}";
         }
 
         /// <summary>
@@ -63,7 +67,7 @@ namespace QuickUnity.Editor.Database.TableDefinition
                     return $"[SerializeField] private {EnumType} {physicalName.ConvertsSnakeToLowerCamel()};";
                 }
 
-                DataType typeName = dataType.IsDateTime() ? DataType.String : dataType;
+                CSharpDataType typeName = cSharpDataType.IsDateTime() ? CSharpDataType.String : cSharpDataType;
                 return
                     $"[SerializeField] private {typeName.ToCsharpName()} {physicalName.ConvertsSnakeToLowerCamel()};";
             }
@@ -76,7 +80,7 @@ namespace QuickUnity.Editor.Database.TableDefinition
         {
             get
             {
-                if (dataType.IsDateTime())
+                if (cSharpDataType.IsDateTime())
                 {
                     return GenerateDateTimeCacheFieldScript;
                 }
@@ -94,7 +98,7 @@ namespace QuickUnity.Editor.Database.TableDefinition
                 {
                     stringBuilder.Indent2()
                         .AppendLine(
-                            $"public {dataType.ToCsharpName()} {physicalName.ConvertsSnakeToUpperCamel()} => {physicalName.ConvertsSnakeToLowerCamel()};");
+                            $"public {cSharpDataType.ToCsharpName()} {physicalName.ConvertsSnakeToUpperCamel()} => {physicalName.ConvertsSnakeToLowerCamel()};");
                 }
 
                 return stringBuilder.ToString();
@@ -122,7 +126,7 @@ namespace QuickUnity.Editor.Database.TableDefinition
                             $"this.{physicalName.ConvertsSnakeToLowerCamel()} = {physicalName.ConvertsSnakeToLowerCamel()};");
                     stringBuilder.Indent2().AppendLine("}");
                 }
-                else if (dataType.IsDateTime())
+                else if (cSharpDataType.IsDateTime())
                 {
                     stringBuilder.Indent2()
                         .Append(
@@ -140,7 +144,7 @@ namespace QuickUnity.Editor.Database.TableDefinition
                 {
                     stringBuilder.Indent2()
                         .Append(
-                            $"public void Set{physicalName.ConvertsSnakeToUpperCamel()}({dataType.ToCsharpName()} {physicalName.ConvertsSnakeToLowerCamel()})");
+                            $"public void Set{physicalName.ConvertsSnakeToUpperCamel()}({cSharpDataType.ToCsharpName()} {physicalName.ConvertsSnakeToLowerCamel()})");
                     stringBuilder.AppendLine("{");
                     stringBuilder.Indent3()
                         .AppendLine(
@@ -164,12 +168,12 @@ namespace QuickUnity.Editor.Database.TableDefinition
                     return $"{EnumType} {PhysicalName.ConvertsSnakeToLowerCamel()}";
                 }
 
-                if (dataType.IsDateTime())
+                if (cSharpDataType.IsDateTime())
                 {
-                    return $"{dataType.ToCsharpName()}? {PhysicalName.ConvertsSnakeToLowerCamel()}";
+                    return $"{cSharpDataType.ToCsharpName()}? {PhysicalName.ConvertsSnakeToLowerCamel()}";
                 }
 
-                return $"{dataType.ToCsharpName()} {PhysicalName.ConvertsSnakeToLowerCamel()}";
+                return $"{cSharpDataType.ToCsharpName()} {PhysicalName.ConvertsSnakeToLowerCamel()}";
             }
         }
 
@@ -180,7 +184,7 @@ namespace QuickUnity.Editor.Database.TableDefinition
         {
             get
             {
-                if (dataType.IsDateTime())
+                if (cSharpDataType.IsDateTime())
                 {
                     return string.Format("this.{0} = {0}.ToString();",
                         PhysicalName.ConvertsSnakeToLowerCamel());
@@ -208,7 +212,7 @@ namespace QuickUnity.Editor.Database.TableDefinition
         {
             StringBuilder builder = new StringBuilder();
 
-            string fieldType = dataType.ToCsharpName();
+            string fieldType = cSharpDataType.ToCsharpName();
             if (IsEnumRelation())
             {
                 fieldType = EnumType;
@@ -220,7 +224,7 @@ namespace QuickUnity.Editor.Database.TableDefinition
             builder.Indent2().AppendLine($"/// <param name=\"entity\">{className}Entity</param>");
             builder.Indent2().AppendLine("/// <returns>If Entity is not null it returns true.</returns>");
 
-            if (dataType.IsDateTime())
+            if (cSharpDataType.IsDateTime())
             {
                 builder.Indent2()
                     .Append(
@@ -245,7 +249,7 @@ namespace QuickUnity.Editor.Database.TableDefinition
         {
             StringBuilder builder = new StringBuilder();
 
-            string fieldType = dataType.ToCsharpName();
+            string fieldType = cSharpDataType.ToCsharpName();
             if (IsEnumRelation())
             {
                 fieldType = EnumType;
@@ -258,7 +262,7 @@ namespace QuickUnity.Editor.Database.TableDefinition
             builder.Indent2().AppendLine($"/// <param name=\"defaultEntity\">{className}Entity</param>");
             builder.Indent2().AppendLine("/// <returns>If Entity is not null it returns default entity.</returns>");
 
-            if (dataType.IsDateTime())
+            if (cSharpDataType.IsDateTime())
             {
                 builder.Indent2()
                     .Append(
@@ -283,7 +287,7 @@ namespace QuickUnity.Editor.Database.TableDefinition
         {
             StringBuilder builder = new StringBuilder();
 
-            string fieldType = dataType.ToCsharpName();
+            string fieldType = cSharpDataType.ToCsharpName();
             if (IsEnumRelation())
             {
                 fieldType = EnumType;
@@ -294,7 +298,7 @@ namespace QuickUnity.Editor.Database.TableDefinition
             builder.Indent2().AppendLine($"/// <param name=\"{physicalName.ConvertsSnakeToLowerCamel()}\"></param>");
             builder.Indent2().AppendLine($"/// <returns>List<{className}Entity></returns>");
 
-            if (dataType.IsDateTime())
+            if (cSharpDataType.IsDateTime())
             {
                 builder.Indent2()
                     .Append(

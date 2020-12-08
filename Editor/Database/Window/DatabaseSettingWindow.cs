@@ -393,7 +393,7 @@ namespace QuickUnity.Editor.Database.Window
                     continue;
                 }
 
-                // undefined dataType is threw
+                // undefined cSharpDataType is threw
                 if (string.IsNullOrEmpty(value: dataType))
                 {
                     continue;

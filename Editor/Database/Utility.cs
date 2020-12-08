@@ -9,7 +9,7 @@ namespace QuickUnity.Editor.Database
         /// </summary>
         /// <returns>type</returns>
         /// <param name="dbTypeName">type name on database.</param>
-        public static DataType ConvertToCSharpTypeName(string dbTypeName)
+        public static CSharpDataType ConvertToCSharpTypeName(string dbTypeName)
         {
             string dbTypeNameToLower = dbTypeName.ToLower();
 
@@ -32,7 +32,7 @@ namespace QuickUnity.Editor.Database
                     //						return "uint";
                     //					}
 
-                    return DataType.Int;
+                    return CSharpDataType.Int;
                 }
 
                 // -9223372036854775808 to 9223372036854775807
@@ -43,26 +43,26 @@ namespace QuickUnity.Editor.Database
                     //						return "ulong";
                     //					}
 
-                    return DataType.Long;
+                    return CSharpDataType.Long;
                 }
 
                 // -9,223,372,036,854,775,808～9,223,372,036,854,775,807
                 case "float":
                 {
-                    return DataType.Float;
+                    return CSharpDataType.Float;
                 }
 
                 // -3.402823466E+38～-1.175494351E-38
                 case "double":
                 {
-                    return DataType.Double;
+                    return CSharpDataType.Double;
                 }
 
                 // true/false, 1/0
                 case "boolean":
                 case "bool":
                 {
-                    return DataType.Bool;
+                    return CSharpDataType.Bool;
                 }
 
                 // 4
@@ -99,17 +99,17 @@ namespace QuickUnity.Editor.Database
                 case "json":
                 case "jsonarray":
                 case "text":
-                    return DataType.String;
+                    return CSharpDataType.String;
 
                 // 1970-01-01 00:00:01' UTC ～ '2038-01-19 03:14:07' UTC
                 case "timestamp":
                 case "datetime":
                 {
-                    return DataType.DateTime;
+                    return CSharpDataType.DateTime;
                 }
             }
 
-            return DataType.Undefined;
+            return CSharpDataType.Undefined;
         }
     }
 }

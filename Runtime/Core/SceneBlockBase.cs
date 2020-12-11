@@ -1,4 +1,4 @@
-using System;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace QuickUnity.Core
@@ -10,15 +10,16 @@ namespace QuickUnity.Core
         /// AwakeMe function is automatically called from SceneController.
         /// </summary>
         /// <see cref="MonoBehaviourEntryPointBase.cs"/>
-        protected internal virtual void AwakeMe()
+        protected internal virtual async UniTask AwakeMe()
         {
+            await UniTask.CompletedTask;
         }
 
         /// <summary>
         /// OnEnableMe function is automatically called from SceneController.
         /// </summary>
         /// <see cref="MonoBehaviourEntryPointBase.cs"/>
-        protected internal virtual void OnEnableMe()
+        protected internal virtual async void OnEnableMe()
         {
         }
 
@@ -26,7 +27,7 @@ namespace QuickUnity.Core
         /// StartMe function is automatically called from SceneController.
         /// </summary>
         /// <see cref="MonoBehaviourEntryPointBase.cs"/>
-        protected internal virtual void StartMe()
+        protected internal virtual async void StartMe()
         {
         }
 
@@ -34,7 +35,7 @@ namespace QuickUnity.Core
         /// FixedUpdateMe function is automatically called from SceneController.
         /// </summary>
         /// <see cref="MonoBehaviourEntryPointBase.cs"/>
-        protected internal virtual void FixedUpdateMe()
+        protected internal virtual async void FixedUpdateMe()
         {
         }
 
@@ -42,7 +43,7 @@ namespace QuickUnity.Core
         /// UpdateMe function is automatically called from SceneController.
         /// </summary>
         /// <see cref="MonoBehaviourEntryPointBase.cs"/>
-        protected internal virtual void UpdateMe()
+        protected internal virtual async void UpdateMe()
         {
         }
 

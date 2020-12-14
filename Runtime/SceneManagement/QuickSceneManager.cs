@@ -1,4 +1,3 @@
-using Cysharp.Threading.Tasks;
 using QuickUnity.Core;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -28,7 +27,6 @@ namespace QuickUnity.SceneManagement
         public static AsyncOperation LoadSingleScene(string sceneName)
         {
             return SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
-            // return SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single).ToUniTask();
         }
     }
 }

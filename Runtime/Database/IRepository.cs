@@ -81,18 +81,16 @@ namespace QuickUnity.Database
         /// <summary>
         /// Get fist entity. But if Entity is null it returns default.
         /// </summary>
-        /// <param name="index"></param>
         /// <param name="defaultEntity"></param>
         /// <returns></returns>
-        TEntity GetFirstOrDefault(int index, TEntity defaultEntity);
+        TEntity GetFirstOrDefault(TEntity defaultEntity);
 
         /// <summary>
         /// Get last entity. But if Entity is null it returns default.
         /// </summary>
-        /// <param name="index"></param>
         /// <param name="defaultEntity"></param>
         /// <returns></returns>
-        TEntity GetLastOrDefault(int index, TEntity defaultEntity);
+        TEntity GetLastOrDefault(TEntity defaultEntity);
 
         /// <summary>
         /// Find entity by.

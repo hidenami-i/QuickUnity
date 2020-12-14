@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using QuickUnity.Core;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -7,6 +8,8 @@ namespace QuickUnity.SceneManagement
     [DisallowMultipleComponent]
     public class QuickSceneManager : SingletonMonoBehaviourBase<QuickSceneManager>
     {
+        [SerializeField] private List<MonoBehaviourEntryPointBase> monoBehaviourEntryPointBaseList;
+
         protected override bool IsPersistent() => true;
 
         public static AsyncOperation LoadAddScene(int sceneBuildIndex)

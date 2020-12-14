@@ -151,7 +151,7 @@ namespace QuickUnity.Database
             return result;
         }
 
-        public TEntity GetByIndexOrDefault(int index, TEntity defaultEntity)
+        public TEntity GetByIndexOrDefault(int index, TEntity defaultEntity = null)
         {
             TEntity result = defaultEntity;
 
@@ -163,7 +163,7 @@ namespace QuickUnity.Database
             return result;
         }
 
-        public TEntity GetFirstOrDefault(int index, TEntity defaultEntity)
+        public TEntity GetFirstOrDefault(TEntity defaultEntity = null)
         {
             TEntity result = defaultEntity;
 
@@ -175,7 +175,7 @@ namespace QuickUnity.Database
             return result;
         }
 
-        public TEntity GetLastOrDefault(int index, TEntity defaultEntity)
+        public TEntity GetLastOrDefault(TEntity defaultEntity = null)
         {
             TEntity result = defaultEntity;
 

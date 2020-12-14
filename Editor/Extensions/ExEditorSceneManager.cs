@@ -35,9 +35,9 @@ namespace QuickUnity.Editor.Extensions
 
         public static void SetActiveSelectionObjectScene()
         {
-            var targetObject = Selection.objects[0] as GameObject;
+            GameObject targetObject = Selection.objects[0] as GameObject;
             var sceneList = GetAllScenes().ToList();
-            foreach (var scene in sceneList)
+            foreach (Scene scene in sceneList)
             {
                 foreach (GameObject root in scene.GetRootGameObjects())
                 {

@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using QuickUnity.Core;
-using QuickUnity.SceneManagement;
 using UnityEngine;
 
 namespace QuickUnity.SceneManagement
@@ -11,23 +9,21 @@ namespace QuickUnity.SceneManagement
     {
         [SerializeField] private List<SceneFragmentBase> sceneFragmentList;
 
+        /// <summary>
+        /// SceneFragment class cache.
+        /// </summary>
         private readonly Dictionary<string, SceneFragmentBase> sceneFragmentCache =
             new Dictionary<string, SceneFragmentBase>();
-
-        public void Refresh<T>() where T : SceneFragmentBase
-        {
-        }
 
         /// <summary>
         /// Refresh SceneFragment.
         /// </summary>
-        /// <see cref="SceneFragmentBase"/>
-        protected void RefreshBy(Predicate<SceneFragmentBase> match)
+        /// <typeparam name="T"></typeparam>
+        public void Refresh<T>() where T : SceneFragmentBase
         {
-            SceneFragmentBase sceneBlock = sceneFragmentList.Find(match);
-            if (sceneBlock != null)
+            if (TryGetSceneFragment(out T sceneFragment))
             {
-                sceneBlock.Refresh();
+                sceneFragment.Refresh();
             }
         }
 
@@ -35,7 +31,7 @@ namespace QuickUnity.SceneManagement
         /// Refresh all SceneFragments.
         /// </summary>
         /// <see cref="SceneFragmentBase"/>
-        protected void RefreshAll()
+        public void RefreshAll()
         {
             foreach (SceneFragmentBase sceneFragment in sceneFragmentList)
             {

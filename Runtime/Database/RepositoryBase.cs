@@ -80,7 +80,7 @@ namespace QuickUnity.Database
         public bool IsNotEmpty() => EntityList.IsNotEmpty();
         public bool IsNotEmptyBy(Predicate<TEntity> match) => FindAllBy(match).IsNotEmpty();
 
-        public virtual void Add(TEntity entity)
+        public void Add(TEntity entity)
         {
             if (entity == null)
             {
@@ -94,7 +94,7 @@ namespace QuickUnity.Database
             }
         }
 
-        public virtual void Add(EntityBase entityBase)
+        public void Add(EntityBase entityBase)
         {
             if (entityBase == null)
             {
@@ -139,6 +139,37 @@ namespace QuickUnity.Database
             }
         }
 
+        /// <summary>
+        /// Gets Entity Data.
+        /// If the data does not exist, null is returned.
+        /// </summary>
+        /// <param name="match"></param>
+        /// <returns></returns>
+        public TEntity GetBy(Predicate<TEntity> match)
+        {
+            return GetByOrDefault(match, null);
+        }
+
+        /// <summary>
+        /// Gets First Entity Data.
+        /// If the data does not exist, null is returned.
+        /// </summary>
+        /// <returns></returns>
+        public TEntity GetFirst()
+        {
+            return GetFirstOrDefault(null);
+        }
+
+        /// <summary>
+        /// Gets Last Entity Data.
+        /// If the data does not exist, null is returned.
+        /// </summary>
+        /// <returns></returns>
+        public TEntity GetLast()
+        {
+            return GetLastOrDefault(null);
+        }
+
         public TEntity GetByOrDefault(Predicate<TEntity> match, TEntity defaultEntity)
         {
             TEntity result = defaultEntity;
@@ -151,7 +182,7 @@ namespace QuickUnity.Database
             return result;
         }
 
-        public TEntity GetByIndexOrDefault(int index, TEntity defaultEntity = null)
+        public TEntity GetByIndexOrDefault(int index, TEntity defaultEntity)
         {
             TEntity result = defaultEntity;
 
@@ -163,7 +194,7 @@ namespace QuickUnity.Database
             return result;
         }
 
-        public TEntity GetFirstOrDefault(TEntity defaultEntity = null)
+        public TEntity GetFirstOrDefault(TEntity defaultEntity)
         {
             TEntity result = defaultEntity;
 
@@ -175,7 +206,7 @@ namespace QuickUnity.Database
             return result;
         }
 
-        public TEntity GetLastOrDefault(TEntity defaultEntity = null)
+        public TEntity GetLastOrDefault(TEntity defaultEntity)
         {
             TEntity result = defaultEntity;
 

@@ -35,6 +35,11 @@ namespace QuickUnity.SceneManagement
         {
             foreach (SceneFragmentBase sceneFragment in sceneFragmentList)
             {
+                if (sceneFragment == null)
+                {
+                    continue;
+                }
+
                 sceneFragment.Refresh();
             }
         }
@@ -45,7 +50,7 @@ namespace QuickUnity.SceneManagement
         /// <param name="sceneFragment"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        protected bool TryGetSceneFragment<T>(out T sceneFragment) where T : SceneFragmentBase
+        public bool TryGetSceneFragment<T>(out T sceneFragment) where T : SceneFragmentBase
         {
             sceneFragment = null;
 

@@ -23,6 +23,12 @@ namespace QuickUnity.Editor.Database.TableDefinition
             this.description = description;
         }
 
+        public int Index => index;
+        public string FieldLogicalName => fieldLogicalName;
+        public string FieldPhysicalName => fieldPhysicalName;
+        public int Value => value;
+        public string Description => description;
+
         public string GenerateEnumValueScript()
         {
             StringBuilder builder = new StringBuilder();

@@ -9,7 +9,7 @@ namespace QuickUnity.SceneManagement
         /// <summary>
         /// Refresh function is called from SceneController.
         /// </summary>
-        /// <see cref="MonoBehaviourEntryPointBase.cs"/>
+        /// <see cref="FragmentManager.cs"/>
         public virtual void Refresh()
         {
         }

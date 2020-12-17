@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using QuickUnity.Extensions.Unity;
 using UnityEngine;
@@ -14,15 +15,30 @@ namespace QuickUnity.Networking
         /// HTTP GET requests asynchronously.
         /// </summary>
         /// <param name="uri"></param>
+        /// <param name="cancellationToken"></param>
+        /// <param name="progress"></param>
         /// <param name="headers"></param>
-        /// <param name="timeoutSec"></param>
+        /// <param name="timeout"></param>
         /// <param name="uploadHandler"></param>
         /// <param name="downloadHandler"></param>
-        public static async UniTask<UnityWebRequest> GetAsync(string uri, Dictionary<string, string> headers = null,
-            int timeoutSec = 60, UploadHandler uploadHandler = null, DownloadHandler downloadHandler = null)
+        public static async UniTask<UnityWebRequest> GetAsync(
+            string uri,
+            CancellationToken cancellationToken = default,
+            IProgress<float> progress = null,
+            Dictionary<string, string> headers = null,
+            TimeSpan timeout = default,
+            UploadHandler uploadHandler = null,
+            DownloadHandler downloadHandler = null)
         {
             UnityWebRequest request = UnityWebRequest.Get(uri);
-            return await SendWebRequest(request, headers, timeoutSec, uploadHandler, downloadHandler);
+            return await SendWebRequest(
+                request,
+                cancellationToken,
+                progress,
+                timeout,
+                headers,
+                uploadHandler,
+                downloadHandler);
         }
 
         /// <summary>
@@ -30,16 +46,31 @@ namespace QuickUnity.Networking
         /// </summary>
         /// <param name="uri"></param>
         /// <param name="postData"></param>
+        /// <param name="cancellationToken"></param>
+        /// <param name="progress"></param>
         /// <param name="headers"></param>
-        /// <param name="timeoutSec"></param>
+        /// <param name="timeout"></param>
         /// <param name="uploadHandler"></param>
         /// <param name="downloadHandler"></param>
-        public static async UniTask<UnityWebRequest> PostAsync(string uri, string postData,
-            Dictionary<string, string> headers = null, int timeoutSec = 60, UploadHandler uploadHandler = null,
+        public static async UniTask<UnityWebRequest> PostAsync(
+            string uri,
+            string postData,
+            CancellationToken cancellationToken = default,
+            IProgress<float> progress = null,
+            Dictionary<string, string> headers = null,
+            TimeSpan timeout = default,
+            UploadHandler uploadHandler = null,
             DownloadHandler downloadHandler = null)
         {
             UnityWebRequest request = UnityWebRequest.Post(uri, postData);
-            return await SendWebRequest(request, headers, timeoutSec, uploadHandler, downloadHandler);
+            return await SendWebRequest(
+                request,
+                cancellationToken,
+                progress,
+                timeout,
+                headers,
+                uploadHandler,
+                downloadHandler);
         }
 
         /// <summary>
@@ -47,16 +78,31 @@ namespace QuickUnity.Networking
         /// </summary>
         /// <param name="uri"></param>
         /// <param name="form"></param>
+        /// <param name="cancellationToken"></param>
+        /// <param name="progress"></param>
         /// <param name="headers"></param>
-        /// <param name="timeoutSec"></param>
+        /// <param name="timeout"></param>
         /// <param name="uploadHandler"></param>
         /// <param name="downloadHandler"></param>
-        public static async UniTask<UnityWebRequest> PostAsync(string uri, WWWForm form,
-            Dictionary<string, string> headers = null, int timeoutSec = 60, UploadHandler uploadHandler = null,
+        public static async UniTask<UnityWebRequest> PostAsync(
+            string uri,
+            WWWForm form,
+            CancellationToken cancellationToken = default,
+            IProgress<float> progress = null,
+            Dictionary<string, string> headers = null,
+            TimeSpan timeout = default,
+            UploadHandler uploadHandler = null,
             DownloadHandler downloadHandler = null)
         {
             UnityWebRequest request = UnityWebRequest.Post(uri, form);
-            return await SendWebRequest(request, headers, timeoutSec, uploadHandler, downloadHandler);
+            return await SendWebRequest(
+                request,
+                cancellationToken,
+                progress,
+                timeout,
+                headers,
+                uploadHandler,
+                downloadHandler);
         }
 
         /// <summary>
@@ -64,16 +110,31 @@ namespace QuickUnity.Networking
         /// </summary>
         /// <param name="uri"></param>
         /// <param name="bodyData"></param>
+        /// <param name="cancellationToken"></param>
+        /// <param name="progress"></param>
         /// <param name="headers"></param>
-        /// <param name="timeoutSec"></param>
+        /// <param name="timeout"></param>
         /// <param name="uploadHandler"></param>
         /// <param name="downloadHandler"></param>
-        public static async UniTask<UnityWebRequest> PutAsync(string uri, string bodyData,
-            Dictionary<string, string> headers = null, int timeoutSec = 60, UploadHandler uploadHandler = null,
+        public static async UniTask<UnityWebRequest> PutAsync(
+            string uri,
+            string bodyData,
+            CancellationToken cancellationToken = default,
+            IProgress<float> progress = null,
+            Dictionary<string, string> headers = null,
+            TimeSpan timeout = default,
+            UploadHandler uploadHandler = null,
             DownloadHandler downloadHandler = null)
         {
             UnityWebRequest request = UnityWebRequest.Put(uri, bodyData);
-            return await SendWebRequest(request, headers, timeoutSec, uploadHandler, downloadHandler);
+            return await SendWebRequest(
+                request,
+                cancellationToken,
+                progress,
+                timeout,
+                headers,
+                uploadHandler,
+                downloadHandler);
         }
 
         /// <summary>
@@ -81,36 +142,70 @@ namespace QuickUnity.Networking
         /// </summary>
         /// <param name="uri"></param>
         /// <param name="bodyData"></param>
+        /// <param name="cancellationToken"></param>
+        /// <param name="progress"></param>
         /// <param name="headers"></param>
-        /// <param name="timeoutSec"></param>
+        /// <param name="timeout"></param>
         /// <param name="uploadHandler"></param>
         /// <param name="downloadHandler"></param>
-        public static async UniTask<UnityWebRequest> PutAsync(string uri, byte[] bodyData,
-            Dictionary<string, string> headers = null, int timeoutSec = 60, UploadHandler uploadHandler = null,
+        public static async UniTask<UnityWebRequest> PutAsync(
+            string uri,
+            byte[] bodyData,
+            CancellationToken cancellationToken = default,
+            IProgress<float> progress = null,
+            Dictionary<string, string> headers = null,
+            TimeSpan timeout = default,
+            UploadHandler uploadHandler = null,
             DownloadHandler downloadHandler = null)
         {
             UnityWebRequest request = UnityWebRequest.Put(uri, bodyData);
-            return await SendWebRequest(request, headers, timeoutSec, uploadHandler, downloadHandler);
+            return await SendWebRequest(
+                request,
+                cancellationToken,
+                progress,
+                timeout,
+                headers,
+                uploadHandler,
+                downloadHandler);
         }
 
         /// <summary>
         /// HTTP DELETE requests asynchronously.
         /// </summary>
         /// <param name="uri"></param>
+        /// <param name="cancellationToken"></param>
+        /// <param name="progress"></param>
         /// <param name="headers"></param>
-        /// <param name="timeoutSec"></param>
+        /// <param name="timeout"></param>
         /// <param name="uploadHandler"></param>
         /// <param name="downloadHandler"></param>
-        public static async UniTask<UnityWebRequest> DeleteAsync(string uri, Dictionary<string, string> headers = null,
-            int timeoutSec = 60, UploadHandler uploadHandler = null, DownloadHandler downloadHandler = null)
+        public static async UniTask<UnityWebRequest> DeleteAsync(
+            string uri,
+            CancellationToken cancellationToken = default,
+            IProgress<float> progress = null,
+            Dictionary<string, string> headers = null,
+            TimeSpan timeout = default,
+            UploadHandler uploadHandler = null,
+            DownloadHandler downloadHandler = null)
         {
             UnityWebRequest request = UnityWebRequest.Delete(uri);
-            return await SendWebRequest(request, headers, timeoutSec, uploadHandler, downloadHandler);
+            return await SendWebRequest(
+                request,
+                cancellationToken,
+                progress,
+                timeout,
+                headers,
+                uploadHandler,
+                downloadHandler);
         }
 
-        internal static async UniTask<UnityWebRequest> SendWebRequest(UnityWebRequest request,
+        internal static async UniTask<UnityWebRequest> SendWebRequest(
+            UnityWebRequest request,
+            CancellationToken cancellationToken,
+            IProgress<float> progress,
+            TimeSpan timeout,
             Dictionary<string, string> headers,
-            int timeoutSec, UploadHandler uploadHandler,
+            UploadHandler uploadHandler,
             DownloadHandler downloadHandler)
         {
             if (headers != null)
@@ -121,7 +216,13 @@ namespace QuickUnity.Networking
                 }
             }
 
-            request.timeout = timeoutSec;
+            CancellationTokenSource linkToken = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            if (timeout == default)
+            {
+                timeout = TimeSpan.FromSeconds(10);
+            }
+
+            linkToken.CancelAfterSlim(timeout);
 
             if (uploadHandler != null)
             {
@@ -133,62 +234,28 @@ namespace QuickUnity.Networking
                 request.downloadHandler = downloadHandler;
             }
 
-            return await request.SendWebRequest();
-        }
-
-        private static IEnumerator SendWebRequestAsCoroutine(UnityWebRequest request, Action<UnityWebRequest> completed,
-            Dictionary<string, string> headers, int timeoutSec, bool chunkedTransfer, UploadHandler uploadHandler,
-            DownloadHandler downloadHandler)
-        {
-            if (headers != null)
+            try
             {
-                foreach (var header in headers)
+                await request.SendWebRequest()
+                    .ToUniTask(progress: progress, cancellationToken: linkToken.Token);
+            }
+            catch (OperationCanceledException)
+            {
+                if (!cancellationToken.IsCancellationRequested)
                 {
-                    request.SetRequestHeader(header.Key, header.Value);
+                    throw new TimeoutException();
+                }
+            }
+            finally
+            {
+                // If it is not a timeout exception, cancel the process.
+                if (!linkToken.IsCancellationRequested)
+                {
+                    linkToken.Cancel();
                 }
             }
 
-            // request.chunkedTransfer = chunkedTransfer;
-            request.timeout = timeoutSec;
-
-            if (uploadHandler != null)
-            {
-                request.uploadHandler = uploadHandler;
-            }
-
-            if (downloadHandler != null)
-            {
-                request.downloadHandler = downloadHandler;
-            }
-
-            UnityWebRequestAsyncOperation operation = request.SendWebRequest();
-
-            while (true)
-            {
-                if (request.result == UnityWebRequest.Result.ProtocolError ||
-                    request.result == UnityWebRequest.Result.ConnectionError)
-                {
-                    Debug.LogError(request.error);
-                    yield break;
-                }
-
-                if (operation.isDone)
-                {
-                    yield break;
-                }
-
-                yield return null;
-
-                ulong size = 0;
-                var responseHeader = request.GetResponseHeader("Content-Length");
-                if (responseHeader != null)
-                {
-                    ulong.TryParse(responseHeader, out size);
-                }
-
-                ExDebug.Log($"progress : {operation.progress}");
-                ExDebug.Log($"download size : {request.downloadedBytes}, size : {size}");
-            }
+            return request;
         }
     }
 }

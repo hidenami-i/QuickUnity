@@ -16,10 +16,6 @@ namespace QuickUnity.Editor.Database.TableDefinition
         [SerializeField] private string enumPhysicalName;
         [SerializeField] private List<EnumDataEntity> enumDataEntityList;
 
-        public string EnumPhysicalName => enumPhysicalName;
-
-        public string ScriptFileName => enumPhysicalName.ConvertsSnakeToUpperCamel() + ".cs";
-
         public EnumTableEntity()
         {
         }
@@ -32,6 +28,16 @@ namespace QuickUnity.Editor.Database.TableDefinition
             this.enumPhysicalName = enumPhysicalName;
             this.enumDataEntityList = enumDataEntityList;
         }
+
+        public string EnumPhysicalName => enumPhysicalName;
+
+        public string Schema => schema;
+
+        public string EnumLogicalName => enumLogicalName;
+
+        public List<EnumDataEntity> EnumDataEntityList => enumDataEntityList;
+
+        public string ScriptFileName => enumPhysicalName.ConvertsSnakeToUpperCamel() + ".cs";
 
         public string GenerateEnumScript(string nameSpace)
         {

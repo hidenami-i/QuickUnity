@@ -5,7 +5,7 @@ using UnityEngine;
 namespace QuickUnity.SceneManagement
 {
     [DisallowMultipleComponent]
-    public abstract class MonoBehaviourEntryPointBase : MonoBehaviourBase
+    public abstract class FragmentManager : MonoBehaviourBase
     {
         [SerializeField] private List<SceneFragmentBase> sceneFragmentList;
 

@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace QuickUnity.Editor.CustomEditor
 {
-    [UnityEditor.CustomEditor(typeof(MonoBehaviourEntryPointBase), true)]
+    [UnityEditor.CustomEditor(typeof(FragmentManager), true)]
     public class MonoBehaviourEntryPointBaseEditor : MonoBehaviourBaseEditor
     {
         public override void OnInspectorGUI()

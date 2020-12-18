@@ -29,17 +29,17 @@ namespace QuickUnity.Extensions.DotNet
         }
 
         /// <summary>
-        /// Writes all text.
+        /// Writes all text as utf8 without BOM.
         /// </summary>
         /// <param name="filePath"></param>
         /// <param name="content"></param>
         public static void WriteAllTextAsUTF8(string filePath, string content)
         {
-            File.WriteAllText(filePath, content, Encoding.UTF8);
+            File.WriteAllText(filePath, content);
         }
 
         /// <summary>
-        /// Writes all text.
+        /// Writes all text as utf8 without BOM.
         /// File Path is create from the folder path and file name.
         /// </summary>
         /// <param name="folderPath">Folder path.</param>
@@ -81,7 +81,7 @@ namespace QuickUnity.Extensions.DotNet
         {
             try
             {
-                return File.ReadAllText(filePath, Encoding.UTF8);
+                return File.ReadAllText(filePath);
             }
             catch (DirectoryNotFoundException e)
             {

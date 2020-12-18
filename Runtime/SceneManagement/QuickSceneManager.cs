@@ -9,7 +9,7 @@ namespace QuickUnity.SceneManagement
     [DisallowMultipleComponent]
     public class QuickSceneManager : SingletonMonoBehaviourBase<QuickSceneManager>
     {
-        [SerializeField] private List<FragmentManager> monoBehaviourEntryPointBaseList;
+        [SerializeField] private List<FragmentManager> fragmentManagerList;
 
         protected override bool IsPersistent() => true;
 
@@ -18,6 +18,16 @@ namespace QuickUnity.SceneManagement
         //     var operation = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
         //     SceneEntity entity = new SceneEntity();
         // }
+
+        public static void AddFragmentManager(FragmentManager fragmentManager)
+        {
+            Me.fragmentManagerList.Add(fragmentManager);
+        }
+
+        public static void RemoveFragmentManager(FragmentManager fragmentManager)
+        {
+            Me.fragmentManagerList.Remove(fragmentManager);
+        }
 
         public static AsyncOperation LoadAddScene(int sceneBuildIndex)
         {

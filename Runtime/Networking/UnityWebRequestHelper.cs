@@ -219,7 +219,7 @@ namespace QuickUnity.Networking
             CancellationTokenSource linkToken = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             if (timeout == default)
             {
-                timeout = TimeSpan.FromSeconds(10);
+                timeout = TimeSpan.FromSeconds(120);
             }
 
             linkToken.CancelAfterSlim(timeout);

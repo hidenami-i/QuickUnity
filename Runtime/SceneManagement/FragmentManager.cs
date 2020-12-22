@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using QuickUnity.Core;
 using UnityEngine;
@@ -6,7 +5,7 @@ using UnityEngine;
 namespace QuickUnity.SceneManagement
 {
     [DisallowMultipleComponent]
-    public abstract class FragmentManager : MonoBehaviourBase
+    public class FragmentManager : MonoBehaviourBase
     {
         [SerializeField] private List<SceneFragmentBase> sceneFragmentList;
 

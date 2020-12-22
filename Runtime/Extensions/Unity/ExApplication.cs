@@ -61,5 +61,17 @@ namespace QuickUnity.Extensions.Unity
         {
             Application.backgroundLoadingPriority = threadPriority;
         }
+
+        /// <summary>
+        /// Quits the application, which exits the playback mode in UnityEditor.
+        /// </summary>
+        public static void ApplicationQuit()
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
+        }
     }
 }

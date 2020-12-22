@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection.Emit;
+using System.Runtime.ExceptionServices;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using QuickUnity.Extensions.Unity;

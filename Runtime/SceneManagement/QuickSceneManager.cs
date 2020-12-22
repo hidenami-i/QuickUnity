@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using QuickUnity.Core;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -7,27 +6,48 @@ using UnityEngine.SceneManagement;
 namespace QuickUnity.SceneManagement
 {
     [DisallowMultipleComponent]
-    public class QuickSceneManager : SingletonMonoBehaviourBase<QuickSceneManager>
+    public abstract class QuickSceneManager : SingletonMonoBehaviourBase<QuickSceneManager>
     {
-        [SerializeField] private List<FragmentManager> fragmentManagerList;
+        private static readonly Dictionary<string, FragmentManager> FragmentManagerCache =
+            new Dictionary<string, FragmentManager>();
 
         protected override bool IsPersistent() => true;
+
+        public static void AddFragmentManager<T>(T fragmentManager) where T : FragmentManager
+        {
+            FragmentManagerCache.Add(typeof(T).Name, fragmentManager);
+        }
+
+        public static void RemoveFragmentManager<T>(T fragmentManager) where T : FragmentManager
+        {
+            FragmentManagerCache.Remove(typeof(T).Name);
+        }
+
+        public static void RefreshAll()
+        {
+            foreach (var keyValuePair in FragmentManagerCache)
+            {
+                keyValuePair.Value.RefreshAll();
+            }
+        }
+
+        public static void RefreshAllBy<T>() where T : FragmentManager
+        {
+            FragmentManager result = GetFragmentManager<T>();
+            if (result == null) return;
+            result.RefreshAll();
+        }
+
+        public static FragmentManager GetFragmentManager<T>() where T : FragmentManager
+        {
+            return FragmentManagerCache[typeof(T).Name];
+        }
 
         // public static AsyncOperation LoadRootScene(string sceneName)
         // {
         //     var operation = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
         //     SceneEntity entity = new SceneEntity();
         // }
-
-        public static void AddFragmentManager(FragmentManager fragmentManager)
-        {
-            Me.fragmentManagerList.Add(fragmentManager);
-        }
-
-        public static void RemoveFragmentManager(FragmentManager fragmentManager)
-        {
-            Me.fragmentManagerList.Remove(fragmentManager);
-        }
 
         public static AsyncOperation LoadAddScene(int sceneBuildIndex)
         {
@@ -49,38 +69,29 @@ namespace QuickUnity.SceneManagement
             return SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
         }
 
-        private void Start()
+        protected void Start()
         {
             SceneManager.sceneLoaded += OnSceneLoaded;
             SceneManager.sceneUnloaded += OnSceneUnloaded;
             SceneManager.activeSceneChanged += OnActiveSceneChanged;
-
-            var a = SceneManager.GetActiveScene().GetRootGameObjects()
-                .First(x => x.GetComponent<FragmentManager>());
-            Debug.Log(a.name);
         }
 
-        private void OnDestroy()
+        protected void OnDisable()
         {
             SceneManager.sceneLoaded -= OnSceneLoaded;
             SceneManager.sceneUnloaded -= OnSceneUnloaded;
             SceneManager.activeSceneChanged -= OnActiveSceneChanged;
         }
 
-        /// <summary>
-        /// Called between Awake Function and Start Function.
-        /// </summary>
-        /// <param name="scene">Called Scene</param>
-        /// <param name="loadSceneMode"></param>
-        protected void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
+        protected virtual void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
         {
         }
 
-        protected void OnSceneUnloaded(Scene scene)
+        protected virtual void OnSceneUnloaded(Scene scene)
         {
         }
 
-        protected void OnActiveSceneChanged(Scene prevScene, Scene nextScene)
+        protected virtual void OnActiveSceneChanged(Scene prevScene, Scene nextScene)
         {
         }
     }

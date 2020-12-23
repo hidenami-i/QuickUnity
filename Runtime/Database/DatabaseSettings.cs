@@ -9,6 +9,7 @@ namespace QuickUnity.Database
 
             /// <summary>
             /// Root folder path for save and load.
+            /// Default is Application.PersistentDataPath.
             /// </summary>
             /// <example>
             /// Application.dataPath
@@ -34,6 +35,7 @@ namespace QuickUnity.Database
 
             /// <summary>
             /// Location folder name.
+            /// Default is Database to MD5 string.
             /// </summary>
             public static string FolderName
             {

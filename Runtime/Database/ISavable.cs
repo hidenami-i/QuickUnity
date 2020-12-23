@@ -3,7 +3,7 @@ namespace QuickUnity.Database
     public interface ISavable
     {
         /// <summary>
-        /// Initialize Database Me from json.
+        /// Setup Database Me from json.
         /// </summary>
         /// <param name="json"></param>
         void FromJson(string json);

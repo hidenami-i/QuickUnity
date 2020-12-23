@@ -32,7 +32,7 @@ namespace QuickUnity.Database
         private static string DefaultFilePath(IDatabase database)
         {
 #if UNITY_EDITOR
-            PathCache.Initialize();
+            PathCache.Setup();
 #endif
 
 #if UNITY_EDITOR
@@ -98,7 +98,7 @@ namespace QuickUnity.Database
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Save(database, DefaultFilePath(database), true, false);
 #else
-			EncryptSave(database, DefaultFilePath(database), Password(database), Salt(database), shouldDeleteContent);
+			SaveAsEncrypted(database, DefaultFilePath(database), Password(database), Salt(database), shouldDeleteContent);
 #endif
         }
 
@@ -111,7 +111,7 @@ namespace QuickUnity.Database
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Load(database, DefaultFilePath(database));
 #else
-			EncryptLoad(database, DefaultFilePath(database), Password(database), Salt(database));
+			LoadAsEncrypted(database, DefaultFilePath(database), Password(database), Salt(database));
 #endif
         }
 
@@ -124,7 +124,7 @@ namespace QuickUnity.Database
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Save(database, DefaultFilePath(database), true, true);
 #else
-			EncryptSave(database, DefaultFilePath(database), "", "", true);
+			SaveAsEncrypted(database, DefaultFilePath(database), "", "", true);
 #endif
         }
 
@@ -163,7 +163,7 @@ namespace QuickUnity.Database
         /// <param name="database"></param>
         /// <param name="filePath"></param>
         /// <param name="isDeleteContent"></param>
-        public static void EncryptSave(this IDatabase database, string filePath, bool isDeleteContent)
+        public static void SaveAsEncrypted(this IDatabase database, string filePath, bool isDeleteContent)
         {
             var contents = Aes128.Encrypt(isDeleteContent ? "" : database.ToJson(false), Password(database),
                 Salt(database));
@@ -179,7 +179,7 @@ namespace QuickUnity.Database
         /// <param name="password"></param>
         /// <param name="salt"></param>
         /// <param name="isDeleteContent"></param>
-        public static void EncryptSave(this IDatabase database, string filePath, string password, string salt,
+        public static void SaveAsEncrypted(this IDatabase database, string filePath, string password, string salt,
             bool isDeleteContent)
         {
             var contents = Aes128.Encrypt(isDeleteContent ? "" : database.ToJson(false), password, salt);
@@ -192,7 +192,7 @@ namespace QuickUnity.Database
         /// </summary>
         /// <param name="database"></param>
         /// <param name="filePath"></param>
-        public static void EncryptLoad(this IDatabase database, string filePath)
+        public static void LoadAsEncrypted(this IDatabase database, string filePath)
         {
             var contents = ExIO.ReadAllBytes(filePath);
             var jsonData =
@@ -207,7 +207,7 @@ namespace QuickUnity.Database
         /// <param name="filePath"></param>
         /// <param name="password"></param>
         /// <param name="salt"></param>
-        public static void EncryptLoad(this IDatabase database, string filePath, string password, string salt)
+        public static void LoadAsEncrypted(this IDatabase database, string filePath, string password, string salt)
         {
             var contents = ExIO.ReadAllBytes(filePath);
             var jsonData = System.Text.Encoding.UTF8.GetString(Aes128.Decrypt(contents, password, salt));

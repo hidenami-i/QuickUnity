@@ -7,7 +7,7 @@ namespace QuickUnity.Database
     public interface IDataMapper<TEntity> where TEntity : class
     {
         /// <summary>
-        /// Initialize DataMapper Me from TEntity.
+        /// Setup DataMapper Me from TEntity.
         /// </summary>
         /// <param name="json"></param>
         void Update(TEntity entity);

@@ -28,10 +28,10 @@ namespace QuickUnity.Database
         public static string TemporaryCachePath { get; private set; }
 
         /// <summary>
-        /// Initialize path cache.
+        /// Setup path cache.
         /// </summary>
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-        public static void Initialize()
+        public static void Setup()
         {
             DataPath = Application.dataPath;
             PersistentDataPath = Application.persistentDataPath;

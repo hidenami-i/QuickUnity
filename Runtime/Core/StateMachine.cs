@@ -92,7 +92,7 @@ namespace QuickUnity.Core
         }
 
         /// <summary>
-        /// Initialize StateMachine.
+        /// Setup StateMachine.
         /// </summary>
         /// <param name="context"></param>
         /// <exception cref="ArgumentNullException"></exception>

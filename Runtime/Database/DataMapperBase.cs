@@ -1,7 +1,7 @@
 using QuickUnity.Extensions.Security;
 using UnityEngine;
 
-namespace QuickUnity.Database
+namespace QuickUnity.Core
 {
     /// <summary>
     /// Object for persistent single entity.
@@ -16,7 +16,7 @@ namespace QuickUnity.Database
         protected abstract TEntity Entity { get; set; }
 
         /// <summary>
-        /// DataMapper instance cahce.
+        /// DataMapper instance cache.
         /// </summary>
         private static KDataMapper instance;
 

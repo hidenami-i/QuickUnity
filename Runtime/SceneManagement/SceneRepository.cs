@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using QuickUnity.Database;
+using QuickUnity.Core;
 using UnityEngine;
 
 namespace QuickUnity.SceneManagement

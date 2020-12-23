@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace QuickUnity.Database
+namespace QuickUnity.Core
 {
     public class EntityBase
     {

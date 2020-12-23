@@ -1,4 +1,4 @@
-namespace QuickUnity.Database
+namespace QuickUnity.Core
 {
     public interface IDatabase : ISavable
     {

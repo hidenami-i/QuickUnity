@@ -8,6 +8,11 @@ namespace QuickUnity.SceneManagement
     [DisallowMultipleComponent]
     public abstract class QuickSceneManager : SingletonMonoBehaviourBase<QuickSceneManager>
     {
+#if UNITY_EDITOR
+        /// <summary> For Inspector </summary>
+        [SerializeField] private List<string> fragmentManagerList = new List<string>();
+#endif
+
         private static readonly Dictionary<string, FragmentManager> FragmentManagerCache =
             new Dictionary<string, FragmentManager>();
 
@@ -15,11 +20,17 @@ namespace QuickUnity.SceneManagement
 
         public static void AddFragmentManager<T>(T fragmentManager) where T : FragmentManager
         {
+#if UNITY_EDITOR
+            Me.fragmentManagerList.Add(typeof(T).Name);
+#endif
             FragmentManagerCache.Add(typeof(T).Name, fragmentManager);
         }
 
         public static void RemoveFragmentManager<T>(T fragmentManager) where T : FragmentManager
         {
+#if UNITY_EDITOR
+            Me.fragmentManagerList.Remove(typeof(T).Name);
+#endif
             FragmentManagerCache.Remove(typeof(T).Name);
         }
 

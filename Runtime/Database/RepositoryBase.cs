@@ -5,7 +5,7 @@ using QuickUnity.Extensions.Security;
 using QuickUnity.Extensions.Unity;
 using UnityEngine;
 
-namespace QuickUnity.Database
+namespace QuickUnity.Core
 {
     /// <summary>
     /// Objects for persisting multiple Entity.

@@ -1,4 +1,6 @@
-namespace QuickUnity.Database
+using UnityEngine;
+
+namespace QuickUnity.Core
 {
     public static class DatabaseSettings
     {

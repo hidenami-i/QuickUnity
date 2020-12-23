@@ -5,100 +5,29 @@ using QuickUnity.Extensions.Security;
 using QuickUnity.Extensions.Unity;
 using QuickUnity.Utility;
 
-namespace QuickUnity.Database
+namespace QuickUnity.Core
 {
     public static class DatabaseExtensions
     {
-        /// <summary>
-        /// file path cache.
-        /// </summary>
+        /// <summary> file path cache. </summary>
         private static readonly Dictionary<string, string> FilePathCache = new Dictionary<string, string>();
 
-        /// <summary>
-        /// password cache.
-        /// </summary>
+        /// <summary> password cache. </summary>
         private static readonly Dictionary<string, string> PCache = new Dictionary<string, string>();
 
-        /// <summary>
-        /// salt cache.
-        /// </summary>
+        /// <summary> salt cache. </summary>
         private static readonly Dictionary<string, string> SCache = new Dictionary<string, string>();
-
-        /// <summary>
-        /// Gets the default file path cache.
-        /// </summary>
-        /// <param name="database"></param>
-        /// <returns></returns>
-        private static string DefaultFilePath(IDatabase database)
-        {
-#if UNITY_EDITOR
-            PathCache.Setup();
-#endif
-
-#if UNITY_EDITOR
-
-            if (!FilePathCache.TryGetValue(database.EntityName, out var filePath))
-            {
-                filePath = Path.Combine(DatabaseSettings.Location.RootFolderPath, "../",
-                    DatabaseSettings.Location.FolderName, database.Schema, database.EntityName + ".json");
-                FilePathCache.Add(database.EntityName, filePath);
-            }
-
-#else
-			if (!filePathCache.TryGetValue(database.Name, out string filePath)) {
-				filePath =
- Path.Combine(DatabaseSettings.Location.RootFolderPath, DatabaseSettings.Location.FolderName, Encrypt.MD5ToString(database.Schema), Encrypt.MD5ToString(database.Name) + ".bytes");
-				filePathCache.Add(database.Name, filePath);
-			}
-
-#endif
-
-            return filePath;
-        }
-
-        /// <summary>
-        /// Gets the password cache.
-        /// </summary>
-        /// <param name="database"></param>
-        /// <returns></returns>
-        private static string Password(ISavable database)
-        {
-            if (!PCache.TryGetValue(database.EntityName, out var p))
-            {
-                p = PBKDF25.Encrypt(database.EntityName);
-                PCache.Add(database.EntityName, p);
-            }
-
-            return p;
-        }
-
-        /// <summary>
-        /// Gets the salt cache.
-        /// </summary>
-        /// <param name="database"></param>
-        /// <returns></returns>
-        private static string Salt(ISavable database)
-        {
-            if (!SCache.TryGetValue(database.Name, out var s))
-            {
-                s = PBKDF25.Encrypt(database.Name);
-                SCache.Add(database.Name, s);
-            }
-
-            return s;
-        }
 
         /// <summary>
         /// Default save to local.
         /// </summary>
         /// <param name="database"></param>
-        /// <param name="shouldDeleteContent"></param>
-        public static void Save(this IDatabase database, bool shouldDeleteContent = false)
+        public static void Save(this IDatabase database)
         {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Save(database, DefaultFilePath(database), true, false);
 #else
-			SaveAsEncrypted(database, DefaultFilePath(database), Password(database), Salt(database), shouldDeleteContent);
+			SaveAsEncrypted(database, DefaultFilePath(database), Password(database), Salt(database), false);
 #endif
         }
 
@@ -137,7 +66,7 @@ namespace QuickUnity.Database
         /// <param name="isDeleteContent"></param>
         public static void Save(this IDatabase database, string filePath, bool isPrettyPrint, bool isDeleteContent)
         {
-            ExIO.WriteAllTextAsUTF8(filePath, isDeleteContent ? "" : database.ToJson(isPrettyPrint));
+            ExIO.WriteAllText(filePath, isDeleteContent ? "" : database.ToJson(isPrettyPrint));
             RuntimeUnityEditor.AssetDataBaseRefresh();
         }
 
@@ -154,7 +83,7 @@ namespace QuickUnity.Database
                 return;
             }
 
-            database.FromJson(ExIO.ReadAllTextAsUTF8(filePath));
+            database.FromJson(ExIO.ReadAllText(filePath));
         }
 
         /// <summary>
@@ -212,6 +141,69 @@ namespace QuickUnity.Database
             var contents = ExIO.ReadAllBytes(filePath);
             var jsonData = System.Text.Encoding.UTF8.GetString(Aes128.Decrypt(contents, password, salt));
             database.FromJson(jsonData);
+        }
+
+        /// <summary>
+        /// Gets the default file path cache.
+        /// </summary>
+        /// <param name="database"></param>
+        /// <returns></returns>
+        private static string DefaultFilePath(IDatabase database)
+        {
+#if UNITY_EDITOR
+            PathCache.Setup();
+#endif
+
+#if UNITY_EDITOR
+            if (!FilePathCache.TryGetValue(database.EntityName, out var filePath))
+            {
+                filePath = Path.Combine(DatabaseSettings.Location.RootFolderPath, "../",
+                    DatabaseSettings.Location.FolderName, database.Schema, $"{database.EntityName}.json");
+                FilePathCache.Add(database.EntityName, filePath);
+            }
+#else
+            if (!FilePathCache.TryGetValue(database.Name, out string filePath))
+            {
+                filePath =
+                    Path.Combine(DatabaseSettings.Location.RootFolderPath, DatabaseSettings.Location.FolderName,
+                        Encrypt.MD5ToString(database.Schema), $"{Encrypt.MD5ToString(database.Name)}.bytes");
+                FilePathCache.Add(database.Name, filePath);
+            }
+#endif
+
+            return filePath;
+        }
+
+        /// <summary>
+        /// Gets the password cache.
+        /// </summary>
+        /// <param name="database"></param>
+        /// <returns></returns>
+        private static string Password(ISavable database)
+        {
+            if (!PCache.TryGetValue(database.EntityName, out var p))
+            {
+                p = PBKDF25.Encrypt(database.EntityName);
+                PCache.Add(database.EntityName, p);
+            }
+
+            return p;
+        }
+
+        /// <summary>
+        /// Gets the salt cache.
+        /// </summary>
+        /// <param name="database"></param>
+        /// <returns></returns>
+        private static string Salt(ISavable database)
+        {
+            if (!SCache.TryGetValue(database.Name, out var s))
+            {
+                s = PBKDF25.Encrypt(database.Name);
+                SCache.Add(database.Name, s);
+            }
+
+            return s;
         }
     }
 }

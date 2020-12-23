@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection.Emit;
-using System.Runtime.ExceptionServices;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
 using QuickUnity.Extensions.Unity;
 
 namespace QuickUnity.Extensions.DotNet
@@ -24,20 +20,16 @@ namespace QuickUnity.Extensions.DotNet
         /// <param name="folderPath">Folder path.</param>
         public static void CreateDirectoryNotExist(string folderPath)
         {
+            if (!IsFolder(folderPath))
+            {
+                ExDebug.Log($"{folderPath} is not folder.");
+                return;
+            }
+
             if (!Directory.Exists(folderPath))
             {
                 Directory.CreateDirectory(folderPath);
             }
-        }
-
-        /// <summary>
-        /// Writes all text as utf8 without BOM.
-        /// </summary>
-        /// <param name="filePath"></param>
-        /// <param name="content"></param>
-        public static void WriteAllTextAsUTF8(string filePath, string content)
-        {
-            File.WriteAllText(filePath, content);
         }
 
         /// <summary>
@@ -47,9 +39,33 @@ namespace QuickUnity.Extensions.DotNet
         /// <param name="folderPath">Folder path.</param>
         /// <param name="fileName">File name.</param>
         /// <param name="contents">Content.</param>
-        public static void WriteAllTextAsUTF8(string folderPath, string fileName, string contents)
+        public static void WriteAllText(string folderPath, string fileName, string contents)
         {
-            WriteAllTextAsUTF8(Path.Combine(folderPath, fileName), contents);
+            WriteAllText(Path.Combine(folderPath, fileName), contents);
+        }
+
+        /// <summary>
+        /// Writes all text as utf8 without BOM.
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="content"></param>
+        public static void WriteAllText(string filePath, string content)
+        {
+            File.WriteAllText(filePath, content);
+        }
+
+        /// <summary>
+        /// Writes all text as uft8 without BOM.
+        /// If the destination folder does not exist, create folder.
+        /// Note : that the process is a bit heavy since it checks for the existence of the folder each time.
+        /// </summary>
+        /// <param name="folderPath"></param>
+        /// <param name="fileName"></param>
+        /// <param name="contents"></param>
+        public static void WriteAllTextIfNotExistCreateDirectory(string folderPath, string fileName, string contents)
+        {
+            CreateDirectoryNotExist(folderPath);
+            WriteAllText(folderPath, fileName, contents);
         }
 
         /// <summary>
@@ -70,16 +86,16 @@ namespace QuickUnity.Extensions.DotNet
         /// <param name="folderPath"></param>
         /// <param name="fileName"></param>
         /// <returns></returns>
-        public static string ReadAllTextAsUTF8(string folderPath, string fileName)
+        public static string ReadAllText(string folderPath, string fileName)
         {
-            return ReadAllTextAsUTF8(Path.Combine(folderPath, fileName));
+            return ReadAllText(Path.Combine(folderPath, fileName));
         }
 
         /// <summary>
         /// Reads all text as utf8.
         /// </summary>
         /// <param name="filePath"></param>
-        public static string ReadAllTextAsUTF8(string filePath)
+        public static string ReadAllText(string filePath)
         {
             try
             {
@@ -177,8 +193,8 @@ namespace QuickUnity.Extensions.DotNet
         /// Delete all the files in the directory.
         /// </summary>
         /// <param name="folderPath">Folder path.</param>
-        /// <param name="containsValue">Contains value.</param>
-        public static void DeleteAllFilesBy(string folderPath, string containsValue = "")
+        /// <param name="includedStringInPath">Contains value.</param>
+        public static void DeleteAllFilesBy(string folderPath, string includedStringInPath = "")
         {
             if (!Directory.Exists(folderPath))
             {
@@ -187,13 +203,13 @@ namespace QuickUnity.Extensions.DotNet
 
             foreach (var file in Directory.GetFiles(folderPath))
             {
-                if (containsValue == string.Empty)
+                if (includedStringInPath.IsNullOrEmpty())
                 {
                     File.Delete(file);
                 }
                 else
                 {
-                    if (file.Contains(containsValue))
+                    if (file.Contains(includedStringInPath))
                     {
                         File.Delete(file);
                     }
@@ -416,6 +432,11 @@ namespace QuickUnity.Extensions.DotNet
 
         public static bool IsFolder(string path)
         {
+            if (path.IsNullOrEmpty())
+            {
+                return false;
+            }
+
             try
             {
                 return File.GetAttributes(path).HasFlag(FileAttributes.Directory);

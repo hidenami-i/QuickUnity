@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using QuickUnity.Core;
 using UnityEngine;
 
 namespace QuickUnity.Core
@@ -7,7 +8,7 @@ namespace QuickUnity.Core
     public static class AppSettings
     {
         /// <summary>
-        /// Set target framerate
+        /// Sets target framerate
         /// </summary>
         /// <param name="frameRate"></param>
         public static void SetTargetFrame(int frameRate)
@@ -17,7 +18,7 @@ namespace QuickUnity.Core
         }
 
         /// <summary>
-        /// Set multi touch enable.
+        /// Sets multi touch enable.
         /// </summary>
         /// <param name="enable"></param>
         public static void SetMultiTouchEnabled(bool enable)
@@ -30,19 +31,19 @@ namespace QuickUnity.Core
             public static class iOS
             {
                 /// <summary>
-                /// <para>Set file flag to be excluded from iCloud/iTunes backup.</para>
+                /// <para>Sets file flag to be excluded from iCloud/iTunes backup.</para>
                 /// </summary>
                 /// <param name="filePath"></param>
                 [Conditional("UNITY_IOS")]
-                public static void SetNoBackupFlag(string filePath)
+                public static void SetNoBackupFlag()
                 {
 #if UNITY_IPHONE || UNITY_IOS
-					UnityEngine.iOS.Device.SetNoBackupFlag(filePath);
+                    UnityEngine.iOS.Device.SetNoBackupFlag(Application.persistentDataPath);
 #endif
                 }
 
                 /// <summary>
-                /// <para>binary formatter for ios.</para>
+                /// <para>Binary formatter for ios.</para>
                 /// </summary>
                 [Conditional("UNITY_IOS")]
                 public static void EnableMonoReflectionSerializer()

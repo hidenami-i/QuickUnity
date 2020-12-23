@@ -1,4 +1,4 @@
-namespace QuickUnity.Database
+namespace QuickUnity.Core
 {
     /// <summary>
     /// Interface for persisting a single Entity object.
@@ -9,7 +9,6 @@ namespace QuickUnity.Database
         /// <summary>
         /// Setup DataMapper Me from TEntity.
         /// </summary>
-        /// <param name="json"></param>
         void Update(TEntity entity);
 
         /// <summary>
@@ -20,10 +19,9 @@ namespace QuickUnity.Database
         bool TryGet(out TEntity entity);
 
         /// <summary>
-        /// Get TEntity instace.
+        /// Get TEntity instance.
         /// If the entity is null, it returns the default value. 
         /// </summary>
-        /// <param name="entity"></param>
         /// <param name="defaultEntity"></param>
         /// <returns></returns>
         TEntity GetOrDefault(TEntity defaultEntity);

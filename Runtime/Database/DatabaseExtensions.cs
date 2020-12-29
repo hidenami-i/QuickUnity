@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using System.IO;
+using QuickUnity.Core;
 using QuickUnity.Extensions.DotNet;
 using QuickUnity.Extensions.Security;
 using QuickUnity.Extensions.Unity;
 using QuickUnity.Utility;
 
-namespace QuickUnity.Core
+namespace QuickUnity.Database
 {
     public static class DatabaseExtensions
     {
@@ -151,23 +152,26 @@ namespace QuickUnity.Core
         private static string DefaultFilePath(IDatabase database)
         {
 #if UNITY_EDITOR
-            PathCache.Setup();
+            ApplicationCache.Setup();
 #endif
 
-#if UNITY_EDITOR
+#if false
             if (!FilePathCache.TryGetValue(database.EntityName, out var filePath))
             {
-                filePath = Path.Combine(DatabaseSettings.Location.RootFolderPath, "../",
-                    DatabaseSettings.Location.FolderName, database.Schema, $"{database.EntityName}.json");
+                filePath = Path.Combine(RootFolderPath, "../", SaveFolderName, database.Schema,
+                    $"{database.EntityName}.json");
                 FilePathCache.Add(database.EntityName, filePath);
             }
 #else
-            if (!FilePathCache.TryGetValue(database.Name, out string filePath))
+            if (!FilePathCache.TryGetValue(database.TableName, out string filePath))
             {
                 filePath =
-                    Path.Combine(DatabaseSettings.Location.RootFolderPath, DatabaseSettings.Location.FolderName,
-                        Encrypt.MD5ToString(database.Schema), $"{Encrypt.MD5ToString(database.Name)}.bytes");
-                FilePathCache.Add(database.Name, filePath);
+                    Path.Combine(
+                        RootFolderPath,
+                        SaveFolderName,
+                        Encrypt.MD5ToString(database.Schema),
+                        $"{Encrypt.MD5ToString(database.TableName)}.bytes");
+                FilePathCache.Add(database.TableName, filePath);
             }
 #endif
 
@@ -179,15 +183,15 @@ namespace QuickUnity.Core
         /// </summary>
         /// <param name="database"></param>
         /// <returns></returns>
-        private static string Password(ISavable database)
+        private static string Password(IDatabase database)
         {
-            if (!PCache.TryGetValue(database.EntityName, out var p))
+            if (!PCache.TryGetValue(database.EntityName, out var password))
             {
-                p = PBKDF25.Encrypt(database.EntityName);
-                PCache.Add(database.EntityName, p);
+                password = PBKDF25.Encrypt(database.EntityName);
+                PCache.Add(database.EntityName, password);
             }
 
-            return p;
+            return password;
         }
 
         /// <summary>
@@ -195,15 +199,42 @@ namespace QuickUnity.Core
         /// </summary>
         /// <param name="database"></param>
         /// <returns></returns>
-        private static string Salt(ISavable database)
+        private static string Salt(IDatabase database)
         {
-            if (!SCache.TryGetValue(database.Name, out var s))
+            if (!SCache.TryGetValue(database.TableName, out var salt))
             {
-                s = PBKDF25.Encrypt(database.Name);
-                SCache.Add(database.Name, s);
+                salt = PBKDF25.Encrypt(database.TableName);
+                SCache.Add(database.TableName, salt);
             }
 
-            return s;
+            return salt;
+        }
+
+        /// <summary>
+        /// Root folder path for save and load.
+        /// </summary>
+        private static string RootFolderPath
+        {
+            get
+            {
+#if UNITY_EDITOR
+                return ApplicationCache.DataPath;
+#else
+			    return ApplicationCache.PersistentDataPath;
+#endif
+            }
+        }
+
+        private static string SaveFolderName
+        {
+            get
+            {
+#if UNITY_EDITOR
+                return "Database";
+#else
+                return Encrypt.MD5ToString(ApplicationCache.CompanyName);
+#endif
+            }
         }
     }
 }

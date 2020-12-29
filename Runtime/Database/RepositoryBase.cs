@@ -5,7 +5,7 @@ using QuickUnity.Extensions.Security;
 using QuickUnity.Extensions.Unity;
 using UnityEngine;
 
-namespace QuickUnity.Core
+namespace QuickUnity.Database
 {
     /// <summary>
     /// Objects for persisting multiple Entity.
@@ -30,20 +30,12 @@ namespace QuickUnity.Core
         /// <summary>
         /// Repository instance.
         /// </summary>
-        public static KRepository Me
-        {
-            get
-            {
-                if (instance != null) return instance;
-                instance = new KRepository();
-                return instance;
-            }
-        }
+        public static KRepository Me => instance ??= new KRepository();
 
         /// <summary>
         /// Gets KRepository name.
         /// </summary>
-        public string Name => typeof(KRepository).Name;
+        public string TableName => typeof(KRepository).Name;
 
         /// <summary>
         /// Gets Entity name.
@@ -52,7 +44,11 @@ namespace QuickUnity.Core
 
         public void FromJson(string json)
         {
-            if (string.IsNullOrEmpty(json)) return;
+            if (string.IsNullOrEmpty(json))
+            {
+                return;
+            }
+
             instance = JsonUtility.FromJson<KRepository>(json);
         }
 
@@ -279,7 +275,7 @@ namespace QuickUnity.Core
         {
             if (IsNullOrEmpty())
             {
-                Debug.LogWarning($"{Name} data is null or empty.");
+                Debug.LogWarning($"{TableName} data is null or empty.");
                 return;
             }
 

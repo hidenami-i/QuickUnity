@@ -61,7 +61,7 @@ namespace QuickUnity.Editor.Database
         //
         //     Type repositoryType = repositoryName.ToType();
         //
-        //     Debug.Log($"repository type : {repositoryType.Name}");
+        //     Debug.Log($"repository type : {repositoryType.TableName}");
         //
         //     IList<string> fieldKeys = sheetValues[1].Select(x => x.ToString()).ToList();
         //     var values = new List<Dictionary<string, object>>();

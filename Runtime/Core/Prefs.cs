@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using QuickUnity.Core;
-using QuickUnity.Extensions.DotNet;
 using QuickUnity.Extensions.Unity;
+using QuickUnity.Database;
+using QuickUnity.Extensions.DotNet;
 using UnityEngine;
 
 namespace QuickUnity.Core

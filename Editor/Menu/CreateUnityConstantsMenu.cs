@@ -62,7 +62,7 @@ namespace QuickUnity.Editor.Menu
             ExIO.CreateDirectoryNotExist(RootPath);
 
             var fileName = $"{className}.cs";
-            ExIO.WriteAllTextAsUTF8(RootPath, fileName, builder.ToString());
+            ExIO.WriteAllText(RootPath, fileName, builder.ToString());
             AssetDatabase.Refresh(ImportAssetOptions.ImportRecursive);
         }
 

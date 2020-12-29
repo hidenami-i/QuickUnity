@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace QuickUnity.Core
+namespace QuickUnity.Database
 {
     public interface IRepository<TEntity> where TEntity : class
     {

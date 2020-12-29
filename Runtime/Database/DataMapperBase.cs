@@ -1,7 +1,7 @@
 using QuickUnity.Extensions.Security;
 using UnityEngine;
 
-namespace QuickUnity.Core
+namespace QuickUnity.Database
 {
     /// <summary>
     /// Object for persistent single entity.
@@ -28,7 +28,7 @@ namespace QuickUnity.Core
         /// <summary>
         /// Gets DataMapper name.
         /// </summary>
-        public string Name => typeof(KDataMapper).Name;
+        public string TableName => typeof(KDataMapper).Name;
 
         /// <summary>
         /// Gets Entity name.

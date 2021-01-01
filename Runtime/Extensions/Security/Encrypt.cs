@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using System.Security.Cryptography;
+using Cysharp.Text;
 
 namespace QuickUnity.Extensions.Security
 {
@@ -9,15 +10,15 @@ namespace QuickUnity.Extensions.Security
         public static string DeTripleDesc(string key, string value)
         {
             // retrieve encrypt
-            byte[] secret = MD5(key);
-            byte[] bytes = Convert.FromBase64String(value);
+            var secret = MD5(key);
+            var bytes = Convert.FromBase64String(value);
 
             // decrypt value 3DES
             TripleDES des = new TripleDESCryptoServiceProvider();
             des.Key = secret;
             des.Mode = CipherMode.ECB;
             ICryptoTransform xform = des.CreateDecryptor();
-            byte[] decrypt = xform.TransformFinalBlock(bytes, 0, bytes.Length);
+            var decrypt = xform.TransformFinalBlock(bytes, 0, bytes.Length);
 
             return Encoding.UTF8.GetString(decrypt);
         }
@@ -25,14 +26,14 @@ namespace QuickUnity.Extensions.Security
         public static string TripleDesc(string key, string value)
         {
             // encrypt value
-            byte[] secret = MD5(key);
-            byte[] bytes = Encoding.UTF8.GetBytes(value);
+            var secret = MD5(key);
+            var bytes = Encoding.UTF8.GetBytes(value);
 
             TripleDES des = new TripleDESCryptoServiceProvider();
             des.Key = secret;
             des.Mode = CipherMode.ECB;
             ICryptoTransform xform = des.CreateEncryptor();
-            byte[] encrypted = xform.TransformFinalBlock(bytes, 0, bytes.Length);
+            var encrypted = xform.TransformFinalBlock(bytes, 0, bytes.Length);
 
             // convert encrypt
             return Convert.ToBase64String(encrypted);
@@ -51,11 +52,11 @@ namespace QuickUnity.Extensions.Security
 
         public static string MD5ToString(byte[] bytes)
         {
-            byte[] bs = MD5(bytes);
-            StringBuilder builder = new StringBuilder();
+            var bs = MD5(bytes);
+            Utf8ValueStringBuilder builder = ZString.CreateUtf8StringBuilder();
 
             // to hex decimal
-            foreach (byte b in bs)
+            foreach (var b in bs)
             {
                 builder.Append(b.ToString("x2"));
             }
@@ -65,11 +66,11 @@ namespace QuickUnity.Extensions.Security
 
         public static string MD5ToString(string str)
         {
-            byte[] bytes = MD5(str);
-            StringBuilder builder = new StringBuilder();
+            var bytes = MD5(str);
+            Utf8ValueStringBuilder builder = ZString.CreateUtf8StringBuilder();
 
             // to hex decimal
-            foreach (byte b in bytes)
+            foreach (var b in bytes)
             {
                 builder.Append(b.ToString("x2"));
             }
@@ -79,14 +80,14 @@ namespace QuickUnity.Extensions.Security
 
         public static string SHA1Key(string strToEncrypt)
         {
-            UTF8Encoding utf8encoding = new UTF8Encoding();
-            byte[] bytes = utf8encoding.GetBytes(strToEncrypt);
+            UTF8Encoding utf8Encoding = new UTF8Encoding();
+            var bytes = utf8Encoding.GetBytes(strToEncrypt);
 
             SHA1 sha = new SHA1CryptoServiceProvider();
-            byte[] hashBytes = sha.ComputeHash(bytes);
+            var hashBytes = sha.ComputeHash(bytes);
 
-            StringBuilder builder = new StringBuilder();
-            for (int i = 0; i < hashBytes.Length; i++)
+            Utf8ValueStringBuilder builder = ZString.CreateUtf8StringBuilder();
+            for (var i = 0; i < hashBytes.Length; i++)
             {
                 builder.Append(Convert.ToString(hashBytes[i], 16).PadLeft(2, '0'));
             }

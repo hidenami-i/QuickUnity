@@ -16,7 +16,7 @@ namespace QuickUnity.Editor.Database
     {
         [SerializeField] private TextAsset spreadSheetCredentialJson;
 
-        public List<SpreadSheetInfoEntity> SpreadSheetInfoList = new List<SpreadSheetInfoEntity>();
+        public List<SpreadSheetInfoEntity> spreadSheetInfoList = new List<SpreadSheetInfoEntity>();
 
         public SheetsService GetSheetService()
         {

@@ -11,11 +11,15 @@ namespace QuickUnity.Core
     [Serializable]
     public class Prefs : RepositoryBase<Prefs.PrefsEntity, Prefs>, IDatabase
     {
-        [SerializeField] private List<PrefsEntity> data = new List<PrefsEntity>();
+        [SerializeField] private List<PrefsEntity> playerPrefs = new List<PrefsEntity>();
 
-        protected override List<PrefsEntity> EntityList => data;
+        protected override List<PrefsEntity> EntityList => playerPrefs;
 
         public string Schema => "PlayerPrefs";
+
+        public override string TableName => "player_prefs";
+
+        public override string PhysicalName => "PlayerPrefs";
 
         /// <summary>
         /// Gets int value by key.

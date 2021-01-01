@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using QuickUnity.Extensions.Unity;
+using UnityEngine;
 
 namespace QuickUnity.Extensions.DotNet
 {
@@ -20,14 +21,10 @@ namespace QuickUnity.Extensions.DotNet
         /// <param name="folderPath">Folder path.</param>
         public static void CreateDirectoryNotExist(string folderPath)
         {
-            if (!IsFolder(folderPath))
-            {
-                ExDebug.Log($"{folderPath} is not folder.");
-                return;
-            }
-
+            Debug.Log($"CreateDirectoryNotExist : {folderPath}");
             if (!Directory.Exists(folderPath))
             {
+                Debug.Log($"ディレクトリ作成 : {folderPath}");
                 Directory.CreateDirectory(folderPath);
             }
         }
@@ -64,6 +61,8 @@ namespace QuickUnity.Extensions.DotNet
         /// <param name="contents"></param>
         public static void WriteAllTextIfNotExistCreateDirectory(string folderPath, string fileName, string contents)
         {
+            Debug.Log($"folderPath : {folderPath}");
+            Debug.Log($"fileName : {fileName}");
             CreateDirectoryNotExist(folderPath);
             WriteAllText(folderPath, fileName, contents);
         }

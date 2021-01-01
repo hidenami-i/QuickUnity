@@ -17,30 +17,20 @@ namespace QuickUnity.Database
     {
         private static readonly object LockObject = new object();
 
-        /// <summary>
-        /// TEntity List.
-        /// </summary>
+        /// <summary> TEntity List. </summary>
         protected abstract List<TEntity> EntityList { get; }
 
-        /// <summary>
-        /// Repository instance cache.
-        /// </summary>
+        /// <summary> Repository instance cache. </summary>
         private static KRepository instance;
 
-        /// <summary>
-        /// Repository instance.
-        /// </summary>
+        /// <summary> Repository instance. </summary>
         public static KRepository Me => instance ??= new KRepository();
 
-        /// <summary>
-        /// Gets KRepository name.
-        /// </summary>
-        public string TableName => typeof(KRepository).Name;
+        /// <summary> Gets Table name. </summary>
+        public virtual string TableName => typeof(KRepository).Name;
 
-        /// <summary>
-        /// Gets Entity name.
-        /// </summary>
-        public string EntityName => typeof(TEntity).Name;
+        /// <summary> Gets Physical name. </summary>
+        public virtual string PhysicalName => typeof(KRepository).Name;
 
         public void FromJson(string json)
         {

@@ -13,11 +13,6 @@ namespace QuickUnity.Database
         string TableName { get; }
 
         /// <summary>
-        /// Entity type name
-        /// </summary>
-        string EntityName { get; }
-
-        /// <summary>
         /// Setup Database Me from json.
         /// </summary>
         /// <param name="json"></param>
@@ -31,7 +26,7 @@ namespace QuickUnity.Database
         string ToJson(bool prettyPrint = true);
 
         /// <summary>
-        /// Gets the hashCode of the Databse object.
+        /// Gets the hashCode of the Database object.
         /// </summary>
         /// <returns></returns>
         string GetContentsHash();

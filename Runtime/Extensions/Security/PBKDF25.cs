@@ -1,6 +1,7 @@
 using System;
 using System.Security.Cryptography;
 using System.Text;
+using Cysharp.Text;
 
 namespace QuickUnity.Extensions.Security
 {
@@ -30,7 +31,7 @@ namespace QuickUnity.Extensions.Security
         public static string EncryptToHexDecimal(string password, int saltSize = 32, int size = 32, int count = 1000)
         {
             byte[] bytes = GetHash(password, GetSalt(saltSize), size, count);
-            StringBuilder builder = new StringBuilder();
+            Utf8ValueStringBuilder builder = ZString.CreateUtf8StringBuilder();
             foreach (byte b in bytes)
             {
                 builder.Append(b.ToString("x2"));

@@ -13,6 +13,7 @@ namespace QuickUnity.Editor.Database.TableDefinition
     [Serializable]
     public class TableDefinitionEntity : EntityBase
     {
+        [SerializeField] private string tableName = "";
         [SerializeField] private string schema = "";
         [SerializeField] private string logicalName = "";
         [SerializeField] private string physicalName = "";
@@ -23,9 +24,10 @@ namespace QuickUnity.Editor.Database.TableDefinition
         {
         }
 
-        public TableDefinitionEntity(string schema, string logicalName, string physicalName,
+        public TableDefinitionEntity(string tableName, string schema, string logicalName, string physicalName,
             string persistentObjectType, List<TableDefinitionDataEntity> data)
         {
+            this.tableName = tableName;
             this.schema = schema;
             this.logicalName = logicalName;
             this.physicalName = physicalName;
@@ -33,6 +35,7 @@ namespace QuickUnity.Editor.Database.TableDefinition
             this.data = data;
         }
 
+        public string TableName => tableName;
         public SchemaType SchemaType => ExEnum.FromString<SchemaType>(schema);
         public string LogicalName => logicalName;
         public string PhysicalName => physicalName;
@@ -200,6 +203,14 @@ namespace QuickUnity.Editor.Database.TableDefinition
             stringBuilder.SetSummaryComment("This getter is generated automatically, so it can not be edited.", 2);
             stringBuilder.AppendLine();
             stringBuilder.Indent2().AppendLine($"public string Schema => \"{schema}\";");
+
+            stringBuilder.SetSummaryComment("This getter is generated automatically, so it can not be edited.", 2);
+            stringBuilder.AppendLine();
+            stringBuilder.Indent2().AppendLine($"public override string TableName => \"{tableName}\";");
+
+            stringBuilder.SetSummaryComment("This getter is generated automatically, so it can not be edited.", 2);
+            stringBuilder.AppendLine();
+            stringBuilder.Indent2().AppendLine($"public override string PhysicalName => \"{physicalName}\";");
 
             stringBuilder.AppendLine();
 

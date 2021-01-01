@@ -26,9 +26,9 @@ namespace QuickUnity.Database
         public static void Save(this IDatabase database)
         {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-            Save(database, DefaultFilePath(database), true, false);
+            Save(database, FilePath(database), true, false);
 #else
-			SaveAsEncrypted(database, DefaultFilePath(database), Password(database), Salt(database), false);
+			SaveAsEncrypted(database, FilePath(database), Password(database), Salt(database), false);
 #endif
         }
 
@@ -39,9 +39,9 @@ namespace QuickUnity.Database
         public static void Load(this IDatabase database)
         {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-            Load(database, DefaultFilePath(database));
+            Load(database, FilePath(database));
 #else
-			LoadAsEncrypted(database, DefaultFilePath(database), Password(database), Salt(database));
+			LoadAsEncrypted(database, FilePath(database), Password(database), Salt(database));
 #endif
         }
 
@@ -52,9 +52,9 @@ namespace QuickUnity.Database
         public static void DeleteContents(this IDatabase database)
         {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-            Save(database, DefaultFilePath(database), true, true);
+            Save(database, FilePath(database), true, true);
 #else
-			SaveAsEncrypted(database, DefaultFilePath(database), "", "", true);
+			SaveAsEncrypted(database, FilePath(database), "", "", true);
 #endif
         }
 
@@ -67,6 +67,10 @@ namespace QuickUnity.Database
         /// <param name="isDeleteContent"></param>
         public static void Save(this IDatabase database, string filePath, bool isPrettyPrint, bool isDeleteContent)
         {
+#if UNITY_EDITOR
+            CreateDatabaseFolder();
+#endif
+
             ExIO.WriteAllText(filePath, isDeleteContent ? "" : database.ToJson(isPrettyPrint));
             RuntimeUnityEditor.AssetDataBaseRefresh();
         }
@@ -80,7 +84,7 @@ namespace QuickUnity.Database
         {
             if (string.IsNullOrEmpty(filePath))
             {
-                ExDebug.LogWarning($"File path is null or empty. Database name is {database.EntityName}");
+                ExDebug.LogWarning($"File path is null or empty. Database name is {database.TableName}");
                 return;
             }
 
@@ -145,35 +149,29 @@ namespace QuickUnity.Database
         }
 
         /// <summary>
+        /// Creates a folder to store the data.
+        /// </summary>
+        public static void CreateDatabaseFolder()
+        {
+            ExIO.CreateDirectoryNotExist(FolderPath);
+        }
+
+        /// <summary>
         /// Gets the default file path cache.
         /// </summary>
         /// <param name="database"></param>
         /// <returns></returns>
-        private static string DefaultFilePath(IDatabase database)
+        private static string FilePath(IDatabase database)
         {
-#if UNITY_EDITOR
-            ApplicationCache.Setup();
-#endif
-
-#if false
-            if (!FilePathCache.TryGetValue(database.EntityName, out var filePath))
+            if (!FilePathCache.TryGetValue(database.TableName, out var filePath))
             {
-                filePath = Path.Combine(RootFolderPath, "../", SaveFolderName, database.Schema,
-                    $"{database.EntityName}.json");
-                FilePathCache.Add(database.EntityName, filePath);
-            }
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+                filePath = Path.Combine(FolderPath, $"{database.TableName}.json");
 #else
-            if (!FilePathCache.TryGetValue(database.TableName, out string filePath))
-            {
-                filePath =
-                    Path.Combine(
-                        RootFolderPath,
-                        SaveFolderName,
-                        Encrypt.MD5ToString(database.Schema),
-                        $"{Encrypt.MD5ToString(database.TableName)}.bytes");
+                filePath = Path.Combine(FolderPath, $"{Encrypt.MD5ToString(database.TableName)}.bytes");
+#endif
                 FilePathCache.Add(database.TableName, filePath);
             }
-#endif
 
             return filePath;
         }
@@ -185,10 +183,10 @@ namespace QuickUnity.Database
         /// <returns></returns>
         private static string Password(IDatabase database)
         {
-            if (!PCache.TryGetValue(database.EntityName, out var password))
+            if (!PCache.TryGetValue(database.TableName, out var password))
             {
-                password = PBKDF25.Encrypt(database.EntityName);
-                PCache.Add(database.EntityName, password);
+                password = PBKDF25.Encrypt(database.TableName);
+                PCache.Add(database.TableName, password);
             }
 
             return password;
@@ -211,28 +209,25 @@ namespace QuickUnity.Database
         }
 
         /// <summary>
-        /// Root folder path for save and load.
+        /// Gets the folder path where the data will be saved.
         /// </summary>
-        private static string RootFolderPath
+        /// <returns></returns>
+        private static string FolderPath
         {
             get
             {
 #if UNITY_EDITOR
-                return ApplicationCache.DataPath;
+                return Path.Combine(
+                    ApplicationCache.DataPath,
+                    "../Database");
+#elif !UNITY_EDITOR && DEVELOPMENT_BUILD
+                return Path.Combine(
+                    ApplicationCache.PersistentDataPath,
+                    ApplicationCache.CompanyName);
 #else
-			    return ApplicationCache.PersistentDataPath;
-#endif
-            }
-        }
-
-        private static string SaveFolderName
-        {
-            get
-            {
-#if UNITY_EDITOR
-                return "Database";
-#else
-                return Encrypt.MD5ToString(ApplicationCache.CompanyName);
+                return Path.Combine(
+                    ApplicationCache.PersistentDataPath,
+                    Encrypt.MD5ToString(ApplicationCache.CompanyName));
 #endif
             }
         }

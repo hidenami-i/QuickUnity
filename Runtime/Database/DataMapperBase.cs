@@ -31,9 +31,9 @@ namespace QuickUnity.Database
         public string TableName => typeof(KDataMapper).Name;
 
         /// <summary>
-        /// Gets Entity name.
+        /// Gets Physical name.
         /// </summary>
-        public string EntityName => typeof(TEntity).Name;
+        public string PhysicalName => typeof(TEntity).Name;
 
         public void FromJson(string json) => instance = JsonUtility.FromJson<KDataMapper>(json);
 

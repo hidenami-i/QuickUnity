@@ -9,15 +9,15 @@ using UnityEngine;
 namespace QuickUnity.Core
 {
     [Serializable]
-    public class Prefs : RepositoryBase<Prefs.PrefsEntity, Prefs>, IDatabase
+    public sealed class Prefs : RepositoryBase<Prefs.PrefsEntity, Prefs>, IDatabase
     {
         [SerializeField] private List<PrefsEntity> playerPrefs = new List<PrefsEntity>();
 
         protected override List<PrefsEntity> EntityList => playerPrefs;
 
-        public string Schema => "PlayerPrefs";
+        public string Schema => "Local";
 
-        public override string TableName => "player_prefs";
+        public override string TableName => "PlayerPrefs";
 
         public override string PhysicalName => "PlayerPrefs";
 

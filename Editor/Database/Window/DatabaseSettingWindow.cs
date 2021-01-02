@@ -233,17 +233,11 @@ namespace QuickUnity.Editor.Database.Window
                 var contents = entity.GenerateEnumScript(nameSpace: ScriptNameSpace);
                 var enumFilePath = Path.Combine(path1: folderPath, path2: entity.ScriptFileName);
                 ExIO.WriteAllTextIfNotExistCreateDirectory(folderPath, entity.ScriptFileName, contents);
-                RuntimeUnityEditor.AssetDataBaseRefresh();
 
                 string[] labels = {SchemaType.Enumeration.ToString()};
                 AssetDatabase.SetLabels(obj: AssetDatabase.LoadAssetAtPath<TextAsset>(assetPath: enumFilePath),
                     labels: labels);
             }
-
-            spreadsheet =
-                await spreadSheetSettingAsset.GetSheetService().Spreadsheets
-                    .Get(spreadsheetId: spreadSheetInfo.SpreadSheetId)
-                    .ExecuteAsync();
 
             // [T] sheets
             var tList = spreadsheet.Sheets.Where(predicate: x => x.Properties.Title.Contains(value: "[T]")).ToList();

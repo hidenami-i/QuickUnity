@@ -58,7 +58,7 @@ namespace QuickUnity.Editor.Database.TableDefinition
             }
         }
 
-        private string ClassName => schema.ConvertsSnakeToUpperCamel() + PhysicalName.ConvertsSnakeToUpperCamel();
+        private string ClassName => PhysicalName.ConvertsSnakeToUpperCamel();
         public string EntityScriptFileName => ClassName + "Entity.cs";
         public string EntityServiceScriptFileName => ClassName + "EntityService.cs";
         public string RepositoryScriptFileName => ClassName + "Repository.cs";

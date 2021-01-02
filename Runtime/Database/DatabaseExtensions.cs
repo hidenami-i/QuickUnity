@@ -70,7 +70,6 @@ namespace QuickUnity.Database
 #if UNITY_EDITOR
             CreateDatabaseFolder();
 #endif
-
             ExIO.WriteAllText(filePath, isDeleteContent ? "" : database.ToJson(isPrettyPrint));
             RuntimeUnityEditor.AssetDataBaseRefresh();
         }
@@ -99,7 +98,9 @@ namespace QuickUnity.Database
         /// <param name="isDeleteContent"></param>
         public static void SaveAsEncrypted(this IDatabase database, string filePath, bool isDeleteContent)
         {
-            var contents = Aes128.Encrypt(isDeleteContent ? "" : database.ToJson(false), Password(database),
+            var contents = Aes128.Encrypt(
+                isDeleteContent ? "" : database.ToJson(false),
+                Password(database),
                 Salt(database));
             File.WriteAllBytes(filePath, contents);
             RuntimeUnityEditor.AssetDataBaseRefresh();
@@ -163,14 +164,14 @@ namespace QuickUnity.Database
         /// <returns></returns>
         private static string FilePath(IDatabase database)
         {
-            if (!FilePathCache.TryGetValue(database.TableName, out var filePath))
+            if (!FilePathCache.TryGetValue(database.PhysicalName, out var filePath))
             {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-                filePath = Path.Combine(FolderPath, $"{database.TableName}.json");
+                filePath = Path.Combine(FolderPath, $"{database.PhysicalName}.json");
 #else
-                filePath = Path.Combine(FolderPath, $"{Encrypt.MD5ToString(database.TableName)}.bytes");
+                filePath = Path.Combine(FolderPath, $"{Encrypt.MD5ToString(database.PhysicalName)}.bytes");
 #endif
-                FilePathCache.Add(database.TableName, filePath);
+                FilePathCache.Add(database.PhysicalName, filePath);
             }
 
             return filePath;
@@ -183,10 +184,10 @@ namespace QuickUnity.Database
         /// <returns></returns>
         private static string Password(IDatabase database)
         {
-            if (!PCache.TryGetValue(database.TableName, out var password))
+            if (!PCache.TryGetValue(database.PhysicalName, out var password))
             {
-                password = PBKDF25.Encrypt(database.TableName);
-                PCache.Add(database.TableName, password);
+                password = PBKDF25.Encrypt(database.PhysicalName);
+                PCache.Add(database.PhysicalName, password);
             }
 
             return password;
@@ -199,7 +200,7 @@ namespace QuickUnity.Database
         /// <returns></returns>
         private static string Salt(IDatabase database)
         {
-            if (!SCache.TryGetValue(database.TableName, out var salt))
+            if (!SCache.TryGetValue(database.PhysicalName, out var salt))
             {
                 salt = PBKDF25.Encrypt(database.TableName);
                 SCache.Add(database.TableName, salt);

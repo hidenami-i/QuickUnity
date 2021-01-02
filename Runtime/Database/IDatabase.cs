@@ -2,15 +2,14 @@ namespace QuickUnity.Database
 {
     public interface IDatabase
     {
-        /// <summary>
-        /// Database schema
-        /// </summary>
+        /// <summary> Database schema </summary>
         string Schema { get; }
 
-        /// <summary>
-        /// Me type TableName
-        /// </summary>
+        /// <summary> TableName </summary>
         string TableName { get; }
+
+        /// <summary> PhysicalName </summary>
+        string PhysicalName { get; }
 
         /// <summary>
         /// Setup Database Me from json.

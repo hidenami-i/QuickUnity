@@ -21,10 +21,8 @@ namespace QuickUnity.Extensions.DotNet
         /// <param name="folderPath">Folder path.</param>
         public static void CreateDirectoryNotExist(string folderPath)
         {
-            Debug.Log($"CreateDirectoryNotExist : {folderPath}");
             if (!Directory.Exists(folderPath))
             {
-                Debug.Log($"ディレクトリ作成 : {folderPath}");
                 Directory.CreateDirectory(folderPath);
             }
         }
@@ -61,8 +59,6 @@ namespace QuickUnity.Extensions.DotNet
         /// <param name="contents"></param>
         public static void WriteAllTextIfNotExistCreateDirectory(string folderPath, string fileName, string contents)
         {
-            Debug.Log($"folderPath : {folderPath}");
-            Debug.Log($"fileName : {fileName}");
             CreateDirectoryNotExist(folderPath);
             WriteAllText(folderPath, fileName, contents);
         }

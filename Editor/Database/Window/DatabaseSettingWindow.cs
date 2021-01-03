@@ -348,9 +348,7 @@ namespace QuickUnity.Editor.Database.Window
             const int dataStartIndex = 5;
 
             var result = new List<EnumDataEntity>();
-            for (var i = dataStartIndex;
-                i < sheetValues.Count;
-                i++)
+            for (var i = dataStartIndex; i < sheetValues.Count; i++)
             {
                 var row = sheetValues[index: i];
                 var index = row.ElementAtOrDefault(index: 0).ToInt(defaultValue: 0);

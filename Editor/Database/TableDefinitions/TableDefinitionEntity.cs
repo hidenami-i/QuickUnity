@@ -20,9 +20,7 @@ namespace QuickUnity.Editor.Database.TableDefinition
         [SerializeField] private string persistentObjectType = "";
         [SerializeField] private List<TableDefinitionDataEntity> data = null;
 
-        public TableDefinitionEntity()
-        {
-        }
+        public TableDefinitionEntity() { }
 
         public TableDefinitionEntity(string tableName, string schema, string logicalName, string physicalName,
             string persistentObjectType, List<TableDefinitionDataEntity> data)
@@ -53,7 +51,7 @@ namespace QuickUnity.Editor.Database.TableDefinition
                 stringBuilder.Indent1().AppendLine("/// <summary>");
                 stringBuilder.Indent1().AppendLine("/// This class is auto-generated do not modify.");
                 stringBuilder.Indent1().AppendLine($"/// Table logical name is [{logicalName}]");
-                stringBuilder.Indent1().AppendLine("/// </summary>");
+                stringBuilder.Indent1().Append("/// </summary>");
                 return stringBuilder.ToString();
             }
         }
@@ -106,14 +104,16 @@ namespace QuickUnity.Editor.Database.TableDefinition
             }
 
             // default constructor
-            stringBuilder.Indent2().Append($"public {ClassName}Entity()").AppendLine(" {}");
+            stringBuilder.Indent2().Append($"public {ClassName}Entity()").AppendLine(" { }");
+            stringBuilder.AppendLine();
             stringBuilder.Indent2().AppendLine($"public {ClassName}Entity(");
 
             // Constructor argument list
             string argument = string.Join(",\n", data.Select(x => "\t\t\t" + x.GenerateConstructorArgumentScript));
             stringBuilder.AppendLine(argument);
 
-            stringBuilder.Indent2().AppendLine(") {");
+            stringBuilder.Indent2().AppendLine(")");
+            stringBuilder.Indent2().AppendLine("{");
 
             // Constructor initialize argument list
             foreach (TableDefinitionDataEntity dataStructureEntity in data)
@@ -125,7 +125,8 @@ namespace QuickUnity.Editor.Database.TableDefinition
 
             stringBuilder.AppendLine();
 
-            stringBuilder.Indent2().AppendLine("public override string ToString() {");
+            stringBuilder.Indent2().AppendLine("public override string ToString()");
+            stringBuilder.Indent2().AppendLine("{");
             stringBuilder.Indent3().AppendLine("StringBuilder builder = new StringBuilder();");
             stringBuilder.Indent3().Append("builder.AppendLine().AppendLine($\"<b>ClassName [{nameof(");
             stringBuilder.Append($"{ClassName}" + "Entity");

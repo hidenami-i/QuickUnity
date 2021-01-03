@@ -122,9 +122,9 @@ namespace QuickUnity.Editor.Database.TableDefinition
                 if (IsEnumRelation())
                 {
                     stringBuilder.Indent2()
-                        .Append(
+                        .AppendLine(
                             $"public void Set{physicalName.ConvertsSnakeToUpperCamel()}({EnumType} {physicalName.ConvertsSnakeToLowerCamel()})");
-                    stringBuilder.AppendLine("{");
+                    stringBuilder.Indent2().AppendLine("{");
                     stringBuilder.Indent3()
                         .AppendLine(
                             $"this.{physicalName.ConvertsSnakeToLowerCamel()} = {physicalName.ConvertsSnakeToLowerCamel()};");
@@ -133,9 +133,9 @@ namespace QuickUnity.Editor.Database.TableDefinition
                 else if (cSharpDataType.IsDateTime())
                 {
                     stringBuilder.Indent2()
-                        .Append(
+                        .AppendLine(
                             $"public void Set{physicalName.ConvertsSnakeToUpperCamel()}(DateTime? {physicalName.ConvertsSnakeToLowerCamel()})");
-                    stringBuilder.AppendLine("{");
+                    stringBuilder.Indent2().AppendLine("{");
                     stringBuilder.Indent3()
                         .AppendLine(
                             $"_{physicalName.ConvertsSnakeToLowerCamel()} = {physicalName.ConvertsSnakeToLowerCamel()};");
@@ -147,9 +147,9 @@ namespace QuickUnity.Editor.Database.TableDefinition
                 else
                 {
                     stringBuilder.Indent2()
-                        .Append(
+                        .AppendLine(
                             $"public void Set{physicalName.ConvertsSnakeToUpperCamel()}({cSharpDataType.ToCsharpName()} {physicalName.ConvertsSnakeToLowerCamel()})");
-                    stringBuilder.AppendLine("{");
+                    stringBuilder.Indent2().AppendLine("{");
                     stringBuilder.Indent3()
                         .AppendLine(
                             $"this.{physicalName.ConvertsSnakeToLowerCamel()} = {physicalName.ConvertsSnakeToLowerCamel()};");

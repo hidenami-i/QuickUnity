@@ -71,7 +71,6 @@ namespace QuickUnity.Database
             CreateDatabaseFolder();
 #endif
             ExIO.WriteAllText(filePath, isDeleteContent ? "" : database.ToJson(isPrettyPrint));
-            RuntimeUnityEditor.AssetDataBaseRefresh();
         }
 
         /// <summary>
@@ -103,7 +102,6 @@ namespace QuickUnity.Database
                 Password(database),
                 Salt(database));
             File.WriteAllBytes(filePath, contents);
-            RuntimeUnityEditor.AssetDataBaseRefresh();
         }
 
         /// <summary>
@@ -119,7 +117,6 @@ namespace QuickUnity.Database
         {
             var contents = Aes128.Encrypt(isDeleteContent ? "" : database.ToJson(false), password, salt);
             File.WriteAllBytes(filePath, contents);
-            RuntimeUnityEditor.AssetDataBaseRefresh();
         }
 
         /// <summary>

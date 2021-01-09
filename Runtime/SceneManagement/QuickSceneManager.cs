@@ -40,7 +40,12 @@ namespace QuickUnity.SceneManagement
 
         public static FragmentManager GetFragmentManager<T>() where T : FragmentManager
         {
-            return FragmentManagerCache[typeof(T).Name];
+            if (FragmentManagerCache.TryGetValue(typeof(T).Name, out FragmentManager fragmentManager))
+            {
+                return fragmentManager;
+            }
+
+            return null;
         }
 
         // public static AsyncOperation LoadRootScene(string sceneName)
@@ -49,22 +54,22 @@ namespace QuickUnity.SceneManagement
         //     SceneEntity entity = new SceneEntity();
         // }
 
-        public static AsyncOperation LoadAddScene(int sceneBuildIndex)
+        public static AsyncOperation LoadAddSceneAsync(int sceneBuildIndex)
         {
             return SceneManager.LoadSceneAsync(sceneBuildIndex, LoadSceneMode.Additive);
         }
 
-        public static AsyncOperation LoadAddScene(string sceneName)
+        public static AsyncOperation LoadAddSceneAsync(string sceneName)
         {
             return SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
         }
 
-        public static AsyncOperation LoadSingleScene(int sceneBuildIndex)
+        public static AsyncOperation LoadSingleSceneAsync(int sceneBuildIndex)
         {
             return SceneManager.LoadSceneAsync(sceneBuildIndex, LoadSceneMode.Single);
         }
 
-        public static AsyncOperation LoadSingleScene(string sceneName)
+        public static AsyncOperation LoadSingleSceneAsync(string sceneName)
         {
             return SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
         }
@@ -85,14 +90,26 @@ namespace QuickUnity.SceneManagement
 
         protected virtual void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
         {
+            foreach (var keyValuePair in FragmentManagerCache)
+            {
+                keyValuePair.Value.OnSceneLoaded(scene, loadSceneMode);
+            }
         }
 
         protected virtual void OnSceneUnloaded(Scene scene)
         {
+            foreach (var keyValuePair in FragmentManagerCache)
+            {
+                keyValuePair.Value.OnSceneUnloaded(scene);
+            }
         }
 
         protected virtual void OnActiveSceneChanged(Scene prevScene, Scene nextScene)
         {
+            foreach (var keyValuePair in FragmentManagerCache)
+            {
+                keyValuePair.Value.OnActiveSceneChanged(prevScene, nextScene);
+            }
         }
     }
 }

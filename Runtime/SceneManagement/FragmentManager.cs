@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using QuickUnity.Core;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace QuickUnity.SceneManagement
 {
@@ -41,6 +43,56 @@ namespace QuickUnity.SceneManagement
                 }
 
                 sceneFragment.Refresh();
+            }
+        }
+
+        public void OnWillSceneLoad() { }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="scene"></param>
+        /// <param name="loadSceneMode"></param>
+        public void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
+        {
+            foreach (SceneFragmentBase sceneFragment in sceneFragmentList)
+            {
+                if (sceneFragment == null)
+                {
+                    continue;
+                }
+
+                sceneFragment.OnSceneLoaded(scene, loadSceneMode);
+            }
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="scene"></param>
+        public void OnSceneUnloaded(Scene scene)
+        {
+            foreach (SceneFragmentBase sceneFragment in sceneFragmentList)
+            {
+                if (sceneFragment == null)
+                {
+                    continue;
+                }
+
+                sceneFragment.OnSceneUnloaded(scene);
+            }
+        }
+
+        public void OnActiveSceneChanged(Scene prevScene, Scene nextScene)
+        {
+            foreach (SceneFragmentBase sceneFragment in sceneFragmentList)
+            {
+                if (sceneFragment == null)
+                {
+                    continue;
+                }
+
+                sceneFragment.OnActiveSceneChanged(prevScene, nextScene);
             }
         }
 

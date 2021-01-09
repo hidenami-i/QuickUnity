@@ -35,7 +35,7 @@ namespace QuickUnity.Core
         /// <summary> Gets Application.unityVersion </summary>
         public static string UnityVersion { get; private set; }
 
-        /// <summary> Setup appliation cache. </summary>
+        /// <summary> Setup application cache. </summary>
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         public static void Setup()
         {

@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics;
-using QuickUnity.Core;
 using UnityEngine;
 
 namespace QuickUnity.Core

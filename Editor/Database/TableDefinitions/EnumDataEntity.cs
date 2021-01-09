@@ -56,12 +56,8 @@ namespace QuickUnity.Editor.Database.TableDefinition
             builder.AppendLine();
             builder.Indent2()
                 .Append(
-                    $"public static bool Is{fieldPhysicalName.ConvertsSnakeToUpperCamel()}(this {enumPhysicalName.ConvertsSnakeToUpperCamel()} {enumPhysicalName.ConvertsSnakeToLowerCamel()})")
-                .AppendLine(" {");
-            builder.Indent3()
-                .AppendLine(
-                    $"return {enumPhysicalName.ConvertsSnakeToLowerCamel()} == {enumPhysicalName.ConvertsSnakeToUpperCamel()}.{fieldPhysicalName.ConvertsSnakeToUpperCamel()};");
-            builder.Indent2().AppendLine("}");
+                    $"public static bool Is{fieldPhysicalName.ConvertsSnakeToUpperCamel()}(this {enumPhysicalName.ConvertsSnakeToUpperCamel()} {enumPhysicalName.ConvertsSnakeToLowerCamel()}) => {enumPhysicalName.ConvertsSnakeToLowerCamel()} == {enumPhysicalName.ConvertsSnakeToUpperCamel()}.{fieldPhysicalName.ConvertsSnakeToUpperCamel()};");
+            builder.AppendLine();
             return builder.ToString();
         }
     }

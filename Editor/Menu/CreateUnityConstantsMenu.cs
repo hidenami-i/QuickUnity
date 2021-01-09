@@ -14,7 +14,7 @@ namespace QuickUnity.Editor.Menu
     public static class CreateUnityConstantsMenu
     {
         private static readonly string RootPath =
-            Path.Combine(Application.dataPath, "App/auto_generated/Scripts/Constants");
+            Path.Combine(Application.dataPath, "App/auto_generated/Constants");
 
         [MenuItem("QuickUnity/Generate Constants")]
         private static void Execute(MenuCommand cmd)

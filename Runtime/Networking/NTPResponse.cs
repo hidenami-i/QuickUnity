@@ -5,7 +5,7 @@ using UnityEngine;
 namespace QuickUnity.Networking
 {
     [Serializable]
-    public class NTPResponse
+    public sealed class NTPResponse
     {
         [SerializeField] private double st = 0;
 

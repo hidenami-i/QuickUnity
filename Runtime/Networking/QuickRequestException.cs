@@ -5,7 +5,7 @@ using UnityEngine.Networking;
 
 namespace QuickUnity.Networking
 {
-    public class QuickRequestException : Exception
+    public sealed class QuickRequestException : Exception
     {
         /// <summary>
         /// returns UnityWebRequest error property.

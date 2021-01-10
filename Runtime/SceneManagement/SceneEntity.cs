@@ -11,9 +11,7 @@ namespace QuickUnity.SceneManagement
         [SerializeField] private Scene scene;
         [SerializeField] private bool isRootScene;
 
-        public SceneEntity()
-        {
-        }
+        public SceneEntity() { }
 
         public SceneEntity(Scene scene, bool isRootScene)
         {

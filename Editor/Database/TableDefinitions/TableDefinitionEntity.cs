@@ -156,6 +156,10 @@ namespace QuickUnity.Editor.Database.TableDefinition
             stringBuilder.SetNameSpace(nameSpace);
 
             stringBuilder.AppendLine("{");
+            stringBuilder.SetSummaryComment(
+                $"This class is a partial class of the auto-generated class.\nauto-generated class is <see cref=\"{ClassName}Entity\"/>",
+                1);
+            stringBuilder.AppendLine();
             stringBuilder.Indent1().AppendLine($"public sealed partial class {ClassName}Entity");
             stringBuilder.Indent1().AppendLine("{");
             stringBuilder.Indent1().AppendLine("}");
@@ -247,6 +251,10 @@ namespace QuickUnity.Editor.Database.TableDefinition
             stringBuilder.SetNameSpace(nameSpace);
 
             stringBuilder.AppendLine("{");
+            stringBuilder.SetSummaryComment(
+                $"This class is a partial class of the auto-generated class.\nauto-generated class is <see cref=\"{ClassName}Repository\"/>",
+                1);
+            stringBuilder.AppendLine();
             stringBuilder.Indent1().AppendLine($"public sealed partial class {ClassName}Repository");
             stringBuilder.Indent1().AppendLine("{");
             stringBuilder.Indent1().AppendLine("}");

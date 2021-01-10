@@ -114,6 +114,10 @@ namespace QuickUnity.Editor.Database.TableDefinition
         {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.SetNameSpace(nameSpace);
+            stringBuilder.Indent0().AppendLine("{");
+            stringBuilder.SetSummaryComment(
+                $"This class is a partial class of the auto-generated class.\nauto-generated class is <see cref=\"{enumPhysicalName.ConvertsSnakeToUpperCamel()}\"/>",
+                1);
             stringBuilder.AppendLine();
             stringBuilder.Indent1()
                 .AppendLine($"public partial class {enumPhysicalName.ConvertsSnakeToUpperCamel()}Extensions " + "{ }");

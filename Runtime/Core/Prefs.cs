@@ -271,12 +271,13 @@ namespace QuickUnity.Core
         }
 
         /// <summary>
-        /// Delete all by category.
+        /// Clear all by category.
         /// </summary>
         /// <param name="category"></param>
-        public void DeleteAllByCategory(string category)
+        public void DeleteByCategory(string category)
         {
-            DeleteAllBy(x => x.Category == category);
+            ClearAllBy(x => x.Category == category);
+            this.Save();
         }
 
         private bool TryFindByKey(string key, out PrefsEntity entity)
@@ -307,9 +308,7 @@ namespace QuickUnity.Core
             internal void SetValue(string newValue) => value = newValue;
             internal void SetCategory(string newCategory) => category = newCategory;
 
-            public PrefsEntity()
-            {
-            }
+            public PrefsEntity() { }
 
             public PrefsEntity(string key, string value, string category)
             {

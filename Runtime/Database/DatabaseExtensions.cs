@@ -46,10 +46,10 @@ namespace QuickUnity.Database
         }
 
         /// <summary>
-        /// Default Delete file contents.
+        /// Default Delete file contents and save.
         /// </summary>
         /// <param name="database"></param>
-        public static void DeleteContents(this IDatabase database)
+        public static void Delete(this IDatabase database)
         {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Save(database, FilePath(database), true, true);

@@ -136,21 +136,21 @@ namespace QuickUnity.Database
         List<TEntity> FindAllBy(Predicate<TEntity> match);
 
         /// <summary>
-        /// Delete the retrieved data.
+        /// Clear the retrieved data.
         /// </summary>
         /// <param name="match"></param>
         /// <returns></returns>
-        void DeleteBy(Predicate<TEntity> match);
+        void ClearBy(Predicate<TEntity> match);
 
         /// <summary>
         /// Delete the all data.
         /// </summary>
-        void DeleteAll();
+        void ClearAll();
 
         /// <summary>
         /// Delete all searched data.
         /// </summary>
         /// <param name="match"></param>
-        void DeleteAllBy(Predicate<TEntity> match);
+        void ClearAllBy(Predicate<TEntity> match);
     }
 }

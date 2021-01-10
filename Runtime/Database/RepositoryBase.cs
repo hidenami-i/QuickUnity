@@ -102,7 +102,7 @@ namespace QuickUnity.Database
                 return;
             }
 
-            DeleteAll();
+            ClearAll();
             foreach (var entityBase in entityBases)
             {
                 Add(entityBase);
@@ -116,7 +116,7 @@ namespace QuickUnity.Database
                 return;
             }
 
-            DeleteAll();
+            ClearAll();
             foreach (var values in list)
             {
                 TEntity entity = new TEntity();
@@ -239,7 +239,7 @@ namespace QuickUnity.Database
 
         public List<TEntity> FindAllBy(Predicate<TEntity> match) => EntityList.FindAll(match);
 
-        public void DeleteBy(Predicate<TEntity> match)
+        public void ClearBy(Predicate<TEntity> match)
         {
             if (TryFindBy(match, out TEntity e))
             {
@@ -250,9 +250,9 @@ namespace QuickUnity.Database
             ExDebug.LogWarning("Not found Entity");
         }
 
-        public void DeleteAll() => EntityList.ClearNotThrow();
+        public void ClearAll() => EntityList.ClearNotThrow();
 
-        public void DeleteAllBy(Predicate<TEntity> match)
+        public void ClearAllBy(Predicate<TEntity> match)
         {
             var list = FindAllBy(match);
             foreach (var entity in list)

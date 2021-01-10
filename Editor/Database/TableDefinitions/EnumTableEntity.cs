@@ -110,6 +110,22 @@ namespace QuickUnity.Editor.Database.TableDefinition
             return stringBuilder.ToString();
         }
 
+        public string GenerateEnumExtensionsScript(string nameSpace)
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.SetNameSpace(nameSpace);
+            stringBuilder.Indent0().AppendLine("{");
+            stringBuilder.SetSummaryComment(
+                $"This enum is generated automatically, so it can not be edited.\n<see cref=\"{enumPhysicalName.ConvertsSnakeToUpperCamel()}\"/>",
+                1);
+            stringBuilder.AppendLine();
+            stringBuilder.Indent1()
+                .AppendLine($"public partial class {enumPhysicalName.ConvertsSnakeToUpperCamel()}Extensions " + "{ }");
+            stringBuilder.Indent0().AppendLine("}");
+            return stringBuilder.ToString();
+        }
+
+
         public override string ToString()
         {
             return

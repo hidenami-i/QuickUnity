@@ -5,7 +5,5 @@ namespace QuickUnity.Core
     /// <summary>
     /// MonoBehaviour base class.
     /// </summary>
-    public class MonoBehaviourBase : MonoBehaviour
-    {
-    }
+    public class MonoBehaviourBase : MonoBehaviour { }
 }

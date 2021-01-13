@@ -1,12 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
-using QuickUnity.Core;
 using QuickUnity.Editor.Extensions;
 using QuickUnity.SceneManagement;
 using UnityEditor;
 using UnityEngine;
 
-namespace QuickUnity.Editor.CustomEditor
+namespace QuickUnity.Editor.Core
 {
     [UnityEditor.CustomEditor(typeof(FragmentManager), true)]
     public class MonoBehaviourEntryPointBaseEditor : MonoBehaviourBaseEditor

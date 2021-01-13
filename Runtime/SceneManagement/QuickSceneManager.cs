@@ -8,44 +8,35 @@ namespace QuickUnity.SceneManagement
     [DisallowMultipleComponent]
     public abstract class QuickSceneManager : SingletonMonoBehaviourBase<QuickSceneManager>
     {
-        private static readonly Dictionary<string, FragmentManager> FragmentManagerCache =
-            new Dictionary<string, FragmentManager>();
+        /// <summary> SceneFragment class cache. </summary>
+        private static readonly Dictionary<string, SceneFragmentBase> SceneFragmentCache =
+            new Dictionary<string, SceneFragmentBase>();
 
         protected override bool IsPersistent() => true;
 
-        public static void AddFragmentManager<T>(T fragmentManager) where T : FragmentManager
+        public static void AddSceneFragment(string name, SceneFragmentBase sceneFragment)
         {
-            FragmentManagerCache.Add(typeof(T).Name, fragmentManager);
+            if (SceneFragmentCache.ContainsKey(name)) return;
+            SceneFragmentCache.Add(name, sceneFragment);
         }
 
-        public static void RemoveFragmentManager<T>(T fragmentManager) where T : FragmentManager
+        public static void RemoveSceneFragment(string name)
         {
-            FragmentManagerCache.Remove(typeof(T).Name);
+            if (!SceneFragmentCache.ContainsKey(name)) return;
+            SceneFragmentCache.Remove(name);
         }
 
-        public static void RefreshAll()
+        public static void Refresh()
         {
-            foreach (var keyValuePair in FragmentManagerCache)
+            foreach (var keyValuePair in SceneFragmentCache)
             {
-                keyValuePair.Value.RefreshAll();
+                if (keyValuePair.Value == null)
+                {
+                    continue;
+                }
+
+                keyValuePair.Value.Refresh();
             }
-        }
-
-        public static void RefreshAllBy<T>() where T : FragmentManager
-        {
-            FragmentManager result = GetFragmentManager<T>();
-            if (result == null) return;
-            result.RefreshAll();
-        }
-
-        public static FragmentManager GetFragmentManager<T>() where T : FragmentManager
-        {
-            if (FragmentManagerCache.TryGetValue(typeof(T).Name, out FragmentManager fragmentManager))
-            {
-                return fragmentManager;
-            }
-
-            return null;
         }
 
         // public static AsyncOperation LoadRootScene(string sceneName)
@@ -74,6 +65,11 @@ namespace QuickUnity.SceneManagement
             return SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
         }
 
+        public static void ReplaceSceneAsync()
+        {
+            // SceneManager.UnloadSceneAsync()
+        }
+
         protected void Start()
         {
             SceneManager.sceneLoaded += OnSceneLoaded;
@@ -90,7 +86,7 @@ namespace QuickUnity.SceneManagement
 
         protected virtual void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
         {
-            foreach (var keyValuePair in FragmentManagerCache)
+            foreach (var keyValuePair in SceneFragmentCache)
             {
                 keyValuePair.Value.OnSceneLoaded(scene, loadSceneMode);
             }
@@ -98,7 +94,7 @@ namespace QuickUnity.SceneManagement
 
         protected virtual void OnSceneUnloaded(Scene scene)
         {
-            foreach (var keyValuePair in FragmentManagerCache)
+            foreach (var keyValuePair in SceneFragmentCache)
             {
                 keyValuePair.Value.OnSceneUnloaded(scene);
             }
@@ -106,7 +102,7 @@ namespace QuickUnity.SceneManagement
 
         protected virtual void OnActiveSceneChanged(Scene prevScene, Scene nextScene)
         {
-            foreach (var keyValuePair in FragmentManagerCache)
+            foreach (var keyValuePair in SceneFragmentCache)
             {
                 keyValuePair.Value.OnActiveSceneChanged(prevScene, nextScene);
             }

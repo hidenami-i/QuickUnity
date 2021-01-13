@@ -7,6 +7,11 @@ namespace QuickUnity.SceneManagement
     [DisallowMultipleComponent]
     public abstract class SceneFragmentBase : MonoBehaviourBase
     {
+        // TODO シーンが消える前
+
+        protected virtual void Awake() => QuickSceneManager.AddSceneFragment(GetType().Name, this);
+        protected void OnDestroy() => QuickSceneManager.RemoveSceneFragment(GetType().Name);
+
         /// <summary>
         /// Refresh function is called from SceneController.
         /// </summary>
@@ -32,5 +37,15 @@ namespace QuickUnity.SceneManagement
         /// <param name="prevScene"></param>
         /// <param name="nextScene"></param>
         public virtual void OnActiveSceneChanged(Scene prevScene, Scene nextScene) { }
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            gameObject.name = GetType().Name;
+            OnValidateMe();
+        }
+#endif
+
+        protected virtual void OnValidateMe() { }
     }
 }

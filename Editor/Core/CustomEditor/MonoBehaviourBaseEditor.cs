@@ -12,12 +12,12 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace QuickUnity.Editor.CustomEditor
+namespace QuickUnity.Editor.Core
 {
     /// <summary>
     /// Sets auto component and asset.
     /// </summary>
-    [UnityEditor.CustomEditor(typeof(MonoBehaviourBase), true)]
+    [CustomEditor(typeof(MonoBehaviourBase), true)]
     public class MonoBehaviourBaseEditor : UnityEditor.Editor
     {
         private const BindingFlags BindingFlags = System.Reflection.BindingFlags.Public |
@@ -37,7 +37,7 @@ namespace QuickUnity.Editor.CustomEditor
             base.OnInspectorGUI();
         }
 
-        private void SetComponent()
+        public void SetComponent()
         {
             GameObject selectObject = Selection.gameObjects.First();
             var descendants = selectObject.Descendants();

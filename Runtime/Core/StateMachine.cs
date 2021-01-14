@@ -1,16 +1,17 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace QuickUnity.Core
 {
-    public class StateMachine<TContext>
+    public class StateMachine<TContext, TTriggerType> where TTriggerType : Enum
     {
         public abstract class StateBase
         {
-            internal StateMachine<TContext> StateMachine;
-            internal ConcurrentDictionary<int, StateBase> StateMapping;
-            protected StateMachine<TContext> GetStateMachine => StateMachine;
+            internal StateMachine<TContext, TTriggerType> StateMachine;
+            internal ConcurrentDictionary<TTriggerType, StateBase> StateMapping;
+            protected StateMachine<TContext, TTriggerType> GetStateMachine => StateMachine;
 
             protected TContext Context => StateMachine.Context;
             protected internal virtual void OnEnter() { }
@@ -20,6 +21,14 @@ namespace QuickUnity.Core
             protected internal virtual void OnExit() { }
         }
 
+        private sealed class AnyState : StateBase
+        {
+            protected internal override void OnEnter()
+            {
+                Debug.Log("AnyState OnEnter");
+            }
+        }
+
         public TContext Context { get; }
         private StateBase currentState;
         private StateBase nextState;
@@ -27,10 +36,17 @@ namespace QuickUnity.Core
         private float updateDeltaTime;
         private float fixedUpdateDeltaTime;
 
-        public static StateMachine<TContext> CreateStateMachine<TStartState>(TContext context)
+        public static StateMachine<TContext, TTriggerType> CreateStateMachine(TContext context)
+        {
+            StateMachine<TContext, TTriggerType> stateMachine = new StateMachine<TContext, TTriggerType>(context);
+            stateMachine.SetStartState<AnyState>();
+            return stateMachine;
+        }
+
+        public static StateMachine<TContext, TTriggerType> CreateStateMachine<TStartState>(TContext context)
             where TStartState : StateBase, new()
         {
-            StateMachine<TContext> stateMachine = new StateMachine<TContext>(context);
+            StateMachine<TContext, TTriggerType> stateMachine = new StateMachine<TContext, TTriggerType>(context);
             stateMachine.SetStartState<TStartState>();
             return stateMachine;
         }
@@ -50,7 +66,7 @@ namespace QuickUnity.Core
             currentState?.OnFixedUpdate(deltaTime);
         }
 
-        public void ChangeState(int triggerId)
+        public void ChangeState(TTriggerType triggerId)
         {
             StateBase nextState;
             if (currentState.StateMapping.TryGetValue(triggerId, out nextState))
@@ -61,7 +77,19 @@ namespace QuickUnity.Core
             }
         }
 
-        public void AddTransition<TPrevState, TNextState>(int triggerId) where TPrevState : StateBase, new()
+        public void ChangeAnyState()
+        {
+            currentState.OnExit();
+            currentState = GetOrCreateState<AnyState>();
+            currentState.OnEnter();
+        }
+
+        public void AddTransitionFromAny<TNextState>(TTriggerType triggerId) where TNextState : StateBase, new()
+        {
+            AddTransition<AnyState, TNextState>(triggerId);
+        }
+
+        public void AddTransition<TPrevState, TNextState>(TTriggerType triggerId) where TPrevState : StateBase, new()
             where TNextState : StateBase, new()
         {
             StateBase prevState = GetOrCreateState<TPrevState>();
@@ -74,6 +102,8 @@ namespace QuickUnity.Core
 
             prevState.StateMapping[triggerId] = GetOrCreateState<TNextState>();
         }
+
+        private StateMachine() { }
 
         /// <summary>
         /// Setup StateMachine.
@@ -110,7 +140,7 @@ namespace QuickUnity.Core
             StateBase newState = Activator.CreateInstance<TState>();
             stateCacheList.Add(newState);
             newState.StateMachine = this;
-            newState.StateMapping = new ConcurrentDictionary<int, StateBase>();
+            newState.StateMapping = new ConcurrentDictionary<TTriggerType, StateBase>();
 
             return newState;
         }

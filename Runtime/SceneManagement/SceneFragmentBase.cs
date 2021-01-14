@@ -10,7 +10,7 @@ namespace QuickUnity.SceneManagement
         // TODO シーンが消える前
 
         protected virtual void Awake() => QuickSceneManager.AddSceneFragment(GetType().Name, this);
-        protected void OnDestroy() => QuickSceneManager.RemoveSceneFragment(GetType().Name);
+        protected virtual void OnDestroy() => QuickSceneManager.RemoveSceneFragment(GetType().Name);
 
         /// <summary>
         /// Refresh function is called from SceneController.
@@ -38,13 +38,11 @@ namespace QuickUnity.SceneManagement
         /// <param name="nextScene"></param>
         public virtual void OnActiveSceneChanged(Scene prevScene, Scene nextScene) { }
 
-#if UNITY_EDITOR
         private void OnValidate()
         {
             gameObject.name = GetType().Name;
             OnValidateMe();
         }
-#endif
 
         protected virtual void OnValidateMe() { }
     }

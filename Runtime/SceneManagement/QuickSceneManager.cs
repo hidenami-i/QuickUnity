@@ -88,6 +88,11 @@ namespace QuickUnity.SceneManagement
         {
             foreach (var keyValuePair in SceneFragmentCache)
             {
+                if (keyValuePair.Value == null)
+                {
+                    continue;
+                }
+
                 keyValuePair.Value.OnSceneLoaded(scene, loadSceneMode);
             }
         }
@@ -96,6 +101,11 @@ namespace QuickUnity.SceneManagement
         {
             foreach (var keyValuePair in SceneFragmentCache)
             {
+                if (keyValuePair.Value == null)
+                {
+                    continue;
+                }
+
                 keyValuePair.Value.OnSceneUnloaded(scene);
             }
         }
@@ -104,6 +114,11 @@ namespace QuickUnity.SceneManagement
         {
             foreach (var keyValuePair in SceneFragmentCache)
             {
+                if (keyValuePair.Value == null)
+                {
+                    continue;
+                }
+
                 keyValuePair.Value.OnActiveSceneChanged(prevScene, nextScene);
             }
         }

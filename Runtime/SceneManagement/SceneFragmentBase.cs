@@ -7,8 +7,6 @@ namespace QuickUnity.SceneManagement
     [DisallowMultipleComponent]
     public abstract class SceneFragmentBase : MonoBehaviourBase
     {
-        // TODO シーンが消える前
-
         protected virtual void Awake() => QuickSceneManager.AddSceneFragment(GetType().Name, this);
         protected virtual void OnDestroy() => QuickSceneManager.RemoveSceneFragment(GetType().Name);
 
@@ -19,7 +17,9 @@ namespace QuickUnity.SceneManagement
         public virtual void Refresh() { }
 
         /// <summary>
-        ///
+        /// It will be called when the scene is called.
+        /// However, it will not be called if it is already in place.
+        /// This will be called before the [Start] function.
         /// </summary>
         /// <param name="scene"></param>
         /// <param name="loadSceneMode"></param>

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace QuickUnity.Core
 {
@@ -21,13 +20,7 @@ namespace QuickUnity.Core
             protected internal virtual void OnExit() { }
         }
 
-        private sealed class AnyState : StateBase
-        {
-            protected internal override void OnEnter()
-            {
-                Debug.Log("AnyState OnEnter");
-            }
-        }
+        private sealed class AnyState : StateBase { }
 
         public TContext Context { get; }
         private StateBase currentState;
@@ -35,6 +28,7 @@ namespace QuickUnity.Core
         private readonly List<StateBase> stateCacheList;
         private float updateDeltaTime;
         private float fixedUpdateDeltaTime;
+        public string GetCurrentStateName => currentState.GetType().Name;
 
         public static StateMachine<TContext, TTriggerType> CreateStateMachine(TContext context)
         {
@@ -79,6 +73,11 @@ namespace QuickUnity.Core
 
         public void ChangeAnyState()
         {
+            if (currentState is AnyState)
+            {
+                return;
+            }
+
             currentState.OnExit();
             currentState = GetOrCreateState<AnyState>();
             currentState.OnEnter();

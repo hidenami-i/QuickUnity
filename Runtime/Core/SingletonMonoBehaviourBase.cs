@@ -8,9 +8,7 @@ namespace QuickUnity.Core
     /// <typeparam name="T">MonoBehaviour</typeparam>
     public abstract class SingletonMonoBehaviourBase<T> : MonoBehaviour where T : MonoBehaviour
     {
-        private static T instance;
-
-        protected static bool applicationIsQuitting;
+        private static T instance = null;
 
         private static readonly object LockObject = new object();
 
@@ -33,25 +31,19 @@ namespace QuickUnity.Core
             {
                 lock (LockObject)
                 {
-                    if (applicationIsQuitting)
+                    if (instance != null)
                     {
-                        return null;
+                        return instance;
                     }
+
+                    instance = FindObjectOfType<T>();
 
                     if (instance != null)
                     {
                         return instance;
                     }
 
-                    System.Type type = typeof(T);
-                    var objects = FindObjectsOfType<T>();
-
-                    if (objects.Length > 1)
-                    {
-                        return objects[0];
-                    }
-
-                    GameObject managerObject = new GameObject("[Singleton]" + type.Name);
+                    GameObject managerObject = new GameObject("[Singleton]" + typeof(T).Name);
                     instance = managerObject.AddComponent<T>();
                     return instance;
                 }
@@ -71,28 +63,22 @@ namespace QuickUnity.Core
         /// </summary>
         protected void Awake()
         {
-            if (instance == null)
-            {
-                instance = this as T;
-                if (IsPersistent())
-                {
-                    DontDestroyOnLoad(gameObject);
-                }
-            }
-            else
+            if (instance != null)
             {
                 Destroy(gameObject);
+                return;
+            }
+
+            instance = GetComponent<T>();
+            if (IsPersistent())
+            {
+                DontDestroyOnLoad(gameObject);
             }
         }
 
         protected virtual void OnDestroy()
         {
             Me = null;
-        }
-
-        protected virtual void OnApplicationQuit()
-        {
-            applicationIsQuitting = true;
         }
     }
 }

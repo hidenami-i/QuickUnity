@@ -48,15 +48,13 @@ namespace QuickUnity.Extensions.DotNet
         public static object InvokeGeneric(this Type type, object obj, string methodName, Type[] parameterTypes,
             Type[] argumentTypes, params object[] parameters)
         {
-            MethodInfo methodInfo = type.GetMethod(methodName, parameterTypes).MakeGenericMethod(argumentTypes);
-
-            ExDebug.Log("method name", methodInfo.Name);
-            ExDebug.Log("obj", obj.ToString());
-            foreach (var parameterType in parameterTypes)
+            var method = type.GetMethod(methodName, parameterTypes);
+            if (method == null)
             {
-                ExDebug.Log("parameterType", parameterType.Name);
+                throw new ArgumentNullException($"{methodName} method does not exist.");
             }
 
+            MethodInfo methodInfo = method.MakeGenericMethod(argumentTypes);
             return methodInfo.Invoke(obj, parameterTypes);
         }
 

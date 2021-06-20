@@ -20,7 +20,7 @@ namespace QuickUnity.Extensions.Unity
         public static string ConvertsDecimalToHex(this Color self)
         {
             int i = 0xFFFFFF & (self.ToInt() >> 8);
-            return i.ConvertsDecimalToHex();
+            return i.ToHex();
         }
 
         /// <summary>

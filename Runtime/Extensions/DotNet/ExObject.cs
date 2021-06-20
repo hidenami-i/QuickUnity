@@ -66,7 +66,7 @@ namespace QuickUnity.Extensions.DotNet
         }
 
         /// <summary>
-        /// Gets the value of the dictionary from the object and converts it to list<object>.
+        /// Gets the value of the dictionary from the object and converts it to list.
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="key"></param>
@@ -84,7 +84,7 @@ namespace QuickUnity.Extensions.DotNet
         }
 
         /// <summary>
-        /// Gets the value of the dictionary from the object and converts it to list<object>.
+        /// Gets the value of the dictionary from the object and converts it to list.
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="key"></param>

@@ -235,7 +235,7 @@ namespace QuickUnity.Networking
             try
             {
                 await request.SendWebRequest()
-                    .ToUniTask(progress: progress, cancellationToken: linkToken.Token);
+                             .ToUniTask(progress: progress, cancellationToken: linkToken.Token);
             }
             catch (OperationCanceledException)
             {

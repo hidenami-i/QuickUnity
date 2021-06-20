@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
 using QuickUnity.Core;
 using UnityEngine;
 using UnityEngine.SceneManagement;

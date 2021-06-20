@@ -15,7 +15,7 @@ namespace QuickUnity.Database
     public abstract class RepositoryBase<TEntity, KRepository> : IRepository<TEntity> where TEntity : EntityBase, new()
         where KRepository : IRepository<TEntity>, new()
     {
-        private static readonly object LockObject = new object();
+        private static readonly object LockObject = new();
 
         /// <summary> TEntity List. </summary>
         protected abstract List<TEntity> EntityList { get; }
@@ -74,6 +74,17 @@ namespace QuickUnity.Database
                 return;
             }
 
+            EntityList.Add(entity);
+        }
+
+        public void AddThreadSafe(TEntity entity)
+        {
+            if (entity == null)
+            {
+                ExDebug.LogError($"{typeof(TEntity).Name} is null.");
+                return;
+            }
+
             lock (LockObject)
             {
                 EntityList.Add(entity);
@@ -81,6 +92,18 @@ namespace QuickUnity.Database
         }
 
         public void Add(EntityBase entityBase)
+        {
+            if (entityBase == null)
+            {
+                ExDebug.LogError($"{typeof(TEntity).Name} is null.");
+                return;
+            }
+
+            TEntity entity = entityBase as TEntity;
+            EntityList.Add(entity);
+        }
+
+        public void AddThreadSafe(EntityBase entityBase)
         {
             if (entityBase == null)
             {

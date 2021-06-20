@@ -8,7 +8,7 @@ namespace QuickUnity.Extensions.DotNet
         /// <para>Converts a decimal number to a hexadecimal string.</para>
         /// <para>1234.ConvertsDecimalToHex() // 0004D2</para>
         /// </summary>
-        public static string ConvertsDecimalToHex(this int self)
+        public static string ToHex(this int self)
         {
             self &= 0xFFFFFF;
             return self.ToString("X6");

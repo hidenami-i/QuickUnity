@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace QuickUnity.Core
 {
@@ -18,6 +19,7 @@ namespace QuickUnity.Core
             protected internal virtual void OnFixedUpdate(float deltaTime) { }
             protected internal virtual void OnLateUpdate(float deltaTime) { }
             protected internal virtual void OnExit() { }
+            protected internal virtual void OnError(Exception exception) { }
         }
 
         private sealed class AnyState : StateBase { }
@@ -32,14 +34,17 @@ namespace QuickUnity.Core
 
         public static StateMachine<TContext, TTriggerType> CreateStateMachine(TContext context)
         {
-            StateMachine<TContext, TTriggerType> stateMachine = new StateMachine<TContext, TTriggerType>(context);
-            stateMachine.SetStartState<AnyState>();
-            return stateMachine;
+            return CreateStateMachine<AnyState>(context);
         }
 
         public static StateMachine<TContext, TTriggerType> CreateStateMachine<TStartState>(TContext context)
             where TStartState : StateBase, new()
         {
+            if (context == null)
+            {
+                throw new ArgumentNullException($"{nameof(context)} is null.");
+            }
+
             StateMachine<TContext, TTriggerType> stateMachine = new StateMachine<TContext, TTriggerType>(context);
             stateMachine.SetStartState<TStartState>();
             return stateMachine;
@@ -62,12 +67,26 @@ namespace QuickUnity.Core
 
         public void ChangeState(TTriggerType triggerId)
         {
-            StateBase nextState;
-            if (currentState.StateMapping.TryGetValue(triggerId, out nextState))
+            if (currentState.StateMapping.TryGetValue(triggerId, out StateBase state))
             {
-                currentState.OnExit();
-                currentState = nextState;
-                currentState.OnEnter();
+                try
+                {
+                    currentState.OnExit();
+                }
+                catch (Exception exception)
+                {
+                    currentState.OnError(exception);
+                }
+
+                try
+                {
+                    currentState = state;
+                    currentState.OnEnter();
+                }
+                catch (Exception exception)
+                {
+                    currentState.OnError(exception);
+                }
             }
         }
 
